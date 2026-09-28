@@ -36,7 +36,7 @@ async function cargarCarrusel() {
     .limit(5);
 
   if (error || !data || data.length === 0) {
-    slideContent.textContent = "Bienvenido a NOVACAMPUS";
+    if (slideContent) slideContent.textContent = "Bienvenido a NOVACAMPUS";
     return;
   }
 
@@ -44,13 +44,15 @@ async function cargarCarrusel() {
   renderizarSlide(0);
 
   // Generar los puntos (dots)
-  dotsContainer.innerHTML = "";
-  destacados.forEach((_, idx) => {
-    const dot = document.createElement("span");
-    dot.className = `dot ${idx === 0 ? "active" : ""}`;
-    dot.onclick = () => cambiarSlideManual(idx);
-    dotsContainer.appendChild(dot);
-  });
+  if (dotsContainer) {
+    dotsContainer.innerHTML = "";
+    destacados.forEach((_, idx) => {
+      const dot = document.createElement("span");
+      dot.className = `dot ${idx === 0 ? "active" : ""}`;
+      dot.onclick = () => cambiarSlideManual(idx);
+      dotsContainer.appendChild(dot);
+    });
+  }
 
   // Iniciar rotación automática cada 4 segundos
   if (intervaloCarrusel) clearInterval(intervaloCarrusel);
@@ -83,28 +85,22 @@ function cambiarSlideManual(index) {
   renderizarSlide(index);
 }
 
-// Carga hasta 20 publicaciones recientes de más nuevo a más antiguo
+// Carga las noticias procesando y ordenando las fechas del evento correctamente
 async function cargarNoticiasPeriodico() {
   const contenedor = document.getElementById("contenedor-noticias");
+  if (!contenedor) return;
+
   contenedor.innerHTML = "<p>Cargando anuncios recientes...</p>";
 
+  // Traemos todas las columnas para asegurar que la fecha del evento esté presente
   const { data, error } = await supabaseConn
     .from("publicaciones")
-    .select(
-      `
-      id,
-      titulo,
-      contenido,
-      tipo,
-      lugar_evento,
-      fecha_publicacion,
-      departamentos ( nombre )
-    `,
-    )
+    .select("*, departamentos(nombre)")
     .order("fecha_publicacion", { ascending: false })
     .limit(20);
 
   if (error) {
+    console.error("Error devuelto por Supabase:", error);
     contenedor.innerHTML = `<p>Error al cargar anuncios: ${error.message}</p>`;
     return;
   }
@@ -115,28 +111,46 @@ async function cargarNoticiasPeriodico() {
     return;
   }
 
+  // Ordenar por la fecha del evento de forma segura en JavaScript
+  data.sort((a, b) => {
+    const valA = a.fecha_evento || a.fecha_publicacion;
+    const valB = b.fecha_evento || b.fecha_publicacion;
+    return new Date(valA) - new Date(valB);
+  });
+
   contenedor.innerHTML = "";
   data.forEach((pub) => {
-    const fechaObj = new Date(pub.fecha_publicacion);
-    const fechaFormateada = fechaObj.toLocaleDateString("es-MX", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-    const horaFormateada = fechaObj.toLocaleTimeString("es-MX", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+    const fechaString = pub.fecha_evento || pub.fecha_publicacion;
+    
+    let fechaFormateada = "";
+    let horaFormateada = "";
+
+    if (fechaString) {
+      const fechaObj = new Date(fechaString);
+
+      fechaFormateada = fechaObj.toLocaleDateString("es-MX", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+
+      horaFormateada = fechaObj.toLocaleTimeString("es-MX", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      });
+    }
 
     const nombreDepto = pub.departamentos?.nombre || "General";
     const lugar = pub.lugar_evento ? `<span>📍 ${pub.lugar_evento}</span>` : "";
+    const htmlHora = horaFormateada ? `<span>A las ${horaFormateada}</span>` : "";
 
     contenedor.innerHTML += `
       <div class="evento-card">
         <h3>${pub.titulo}</h3>
         <div class="evento-meta">
           <span>El ${fechaFormateada}</span>
-          <span>A las ${horaFormateada}</span>
+          ${htmlHora}
           ${lugar}
         </div>
         <p>${pub.contenido}</p>

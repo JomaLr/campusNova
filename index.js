@@ -1,3 +1,4 @@
+
 // Conexión con credenciales a Supabase
 const BASE_URL = "https://pjuabhjyxekejoqfwxpt.supabase.co";
 const BASE_ANON_KEY = "sb_publishable_6A8SA8l_ryXomSoo2N66bg_CB5A9YKd";
@@ -36,7 +37,7 @@ async function cargarCarrusel() {
     .limit(5);
 
   if (error || !data || data.length === 0) {
-    slideContent.textContent = "Bienvenido a NOVACAMPUS";
+    if (slideContent) slideContent.textContent = "Bienvenido a NOVACAMPUS";
     return;
   }
 
@@ -44,13 +45,15 @@ async function cargarCarrusel() {
   renderizarSlide(0);
 
   // Generar los puntos (dots)
-  dotsContainer.innerHTML = "";
-  destacados.forEach((_, idx) => {
-    const dot = document.createElement("span");
-    dot.className = `dot ${idx === 0 ? "active" : ""}`;
-    dot.onclick = () => cambiarSlideManual(idx);
-    dotsContainer.appendChild(dot);
-  });
+  if (dotsContainer) {
+    dotsContainer.innerHTML = "";
+    destacados.forEach((_, idx) => {
+      const dot = document.createElement("span");
+      dot.className = `dot ${idx === 0 ? "active" : ""}`;
+      dot.onclick = () => cambiarSlideManual(idx);
+      dotsContainer.appendChild(dot);
+    });
+  }
 
   // Iniciar rotación automática cada 4 segundos
   if (intervaloCarrusel) clearInterval(intervaloCarrusel);
@@ -83,9 +86,11 @@ function cambiarSlideManual(index) {
   renderizarSlide(index);
 }
 
-// Carga hasta 20 publicaciones recientes de más nuevo a más antiguo
+// Carga hasta 20 publicaciones recientes ordenadas por la fecha del evento
 async function cargarNoticiasPeriodico() {
   const contenedor = document.getElementById("contenedor-noticias");
+  if (!contenedor) return;
+
   contenedor.innerHTML = "<p>Cargando anuncios recientes...</p>";
 
   const { data, error } = await supabaseConn
@@ -98,10 +103,11 @@ async function cargarNoticiasPeriodico() {
       tipo,
       lugar_evento,
       fecha_publicacion,
+      fecha_evento,
       departamentos ( nombre )
-    `,
+    `
     )
-    .order("fecha_publicacion", { ascending: false })
+    .order("fecha_evento", { ascending: true })
     .limit(20);
 
   if (error) {
@@ -117,15 +123,20 @@ async function cargarNoticiasPeriodico() {
 
   contenedor.innerHTML = "";
   data.forEach((pub) => {
-    const fechaObj = new Date(pub.fecha_publicacion);
+    const fechaAMostrar = pub.fecha_evento || pub.fecha_publicacion;
+    const fechaObj = new Date(fechaAMostrar);
+
+    // Formatear fecha y hora sincronizadas con la zona horaria local
     const fechaFormateada = fechaObj.toLocaleDateString("es-MX", {
       year: "numeric",
       month: "short",
       day: "numeric",
     });
+    
     const horaFormateada = fechaObj.toLocaleTimeString("es-MX", {
       hour: "2-digit",
       minute: "2-digit",
+      hour12: true
     });
 
     const nombreDepto = pub.departamentos?.nombre || "General";

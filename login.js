@@ -10,55 +10,58 @@ document.addEventListener("DOMContentLoaded", async () => {
   } = await supabaseConn.auth.getSession();
 
   if (session) {
-    // Si ya está logueado, redirigir al Dashboard
+    // Si ya está logueado, lo mandamos directo al Dashboard
     window.location.href = "dashboard.html";
     return;
   }
 
-  // Función reutilizable para iniciar sesión
-  const ejecutarLogin = async () => {
-    const email = document.getElementById("user").value.trim();
-    const password = document.getElementById("pass").value;
-    const errorMsg = document.getElementById("error-msg");
+  // 2. Si NO hay sesión, escuchamos el evento del botón de login
+  const btnIngresar = document.getElementById("btn-ingresar");
 
-    // Ocultar mensaje previo si existe
-    if (errorMsg) errorMsg.style.display = "none";
+  if (btnIngresar) {
+    btnIngresar.addEventListener("click", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("user").value;
+      const password = document.getElementById("pass").value;
 
-    const { data, error } = await supabaseConn.auth.signInWithPassword({
-      email: email,
-      password: password,
-    });
+      const { data, error } = await supabaseConn.auth.signInWithPassword({
+        email: email,
+        password: password,
+      });
 
-    if (error) {
-      if (errorMsg) {
+      if (error) {
+        const errorMsg = document.getElementById("error-msg");
         errorMsg.textContent = "Credenciales incorrectas";
         errorMsg.style.display = "block";
+      } else {
+        window.location.href = "dashboard.html";
       }
-    } else {
-      window.location.href = "dashboard.html";
-    }
-  };
-
-  // 2. Evento Click en el Botón de Ingresar
-  const btnIngresar = document.getElementById("btn-ingresar");
-  if (btnIngresar) {
-    btnIngresar.addEventListener("click", (e) => {
-      e.preventDefault();
-      ejecutarLogin();
     });
   }
+});
 
-  // 3. Evento Enter en los inputs (Usuario y Contraseña)
-  const inputPass = document.getElementById("pass");
-  const inputUser = document.getElementById("user");
+//Evento de entrar en la sesión
+document.addEventListener("DOMContentLoaded", () => {
+  const btnIngresar = document.getElementById("btn-ingresar");
 
-  const manejarEnter = (e) => {
-    if (e.key === "Enter") {
+  if (btnIngresar) {
+    btnIngresar.addEventListener("click", async (e) => {
       e.preventDefault();
-      ejecutarLogin();
-    }
-  };
+      const email = document.getElementById("user").value;
+      const password = document.getElementById("pass").value;
 
-  if (inputPass) inputPass.addEventListener("keydown", manejarEnter);
-  if (inputUser) inputUser.addEventListener("keydown", manejarEnter);
+      const { data, error } = await supabaseConn.auth.signInWithPassword({
+        email: email,
+        password: password,
+      });
+
+      if (error) {
+        const errorMsg = document.getElementById("error-msg");
+        errorMsg.textContent = "Credenciales incorrectas";
+        errorMsg.style.display = "block";
+      } else {
+        window.location.href = "dashboard.html";
+      }
+    });
+  }
 });

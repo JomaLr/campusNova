@@ -10,81 +10,55 @@ document.addEventListener("DOMContentLoaded", async () => {
   } = await supabaseConn.auth.getSession();
 
   if (session) {
-    // Si ya está logueado, lo mandamos directo al Dashboard
+    // Si ya está logueado, redirigir al Dashboard
     window.location.href = "dashboard.html";
     return;
   }
 
-  // 2. Si NO hay sesión, escuchamos el evento del botón de login
-  const btnIngresar = document.getElementById("btn-ingresar");
+  // Función reutilizable para iniciar sesión
+  const ejecutarLogin = async () => {
+    const email = document.getElementById("user").value.trim();
+    const password = document.getElementById("pass").value;
+    const errorMsg = document.getElementById("error-msg");
 
-  if (btnIngresar) {
-    btnIngresar.addEventListener("click", async (e) => {
-      e.preventDefault();
-      const email = document.getElementById("user").value;
-      const password = document.getElementById("pass").value;
+    // Ocultar mensaje previo si existe
+    if (errorMsg) errorMsg.style.display = "none";
 
-      const { data, error } = await supabaseConn.auth.signInWithPassword({
-        email: email,
-        password: password,
-      });
-
-      if (error) {
-        const errorMsg = document.getElementById("error-msg");
-        errorMsg.textContent = "Credenciales incorrectas";
-        errorMsg.style.display = "block";
-      } else {
-        window.location.href = "dashboard.html";
-      }
+    const { data, error } = await supabaseConn.auth.signInWithPassword({
+      email: email,
+      password: password,
     });
-    //enter
-    // 2. Si NO hay sesión, escuchamos el evento del botón de login
-  const entIngresar = document.getElementById("pass");
 
-  if (entIngresar) {
-    entIngresar.addEventListener("input", async (e) => {
-      e.preventDefault();
-      const email = document.getElementById("user").value;
-      const password = document.getElementById("pass").value;
-
-      const { data, error } = await supabaseConn.auth.signInWithPassword({
-        email: email,
-        password: password,
-      });
-
-      if (error) {
-        const errorMsg = document.getElementById("error-msg");
+    if (error) {
+      if (errorMsg) {
         errorMsg.textContent = "Credenciales incorrectas";
         errorMsg.style.display = "block";
-      } else {
-        window.location.href = "dashboard.html";
       }
+    } else {
+      window.location.href = "dashboard.html";
+    }
+  };
+
+  // 2. Evento Click en el Botón de Ingresar
+  const btnIngresar = document.getElementById("btn-ingresar");
+  if (btnIngresar) {
+    btnIngresar.addEventListener("click", (e) => {
+      e.preventDefault();
+      ejecutarLogin();
     });
   }
-});
 
-//Evento de entrar en la sesión
-document.addEventListener("DOMContentLoaded", () => {
-  const btnIngresar = document.getElementById("btn-ingresar");
+  // 3. Evento Enter en los inputs (Usuario y Contraseña)
+  const inputPass = document.getElementById("pass");
+  const inputUser = document.getElementById("user");
 
-  if (btnIngresar) {
-    btnIngresar.addEventListener("click", async (e) => {
+  const manejarEnter = (e) => {
+    if (e.key === "Enter") {
       e.preventDefault();
-      const email = document.getElementById("user").value;
-      const password = document.getElementById("pass").value;
+      ejecutarLogin();
+    }
+  };
 
-      const { data, error } = await supabaseConn.auth.signInWithPassword({
-        email: email,
-        password: password,
-      });
-
-      if (error) {
-        const errorMsg = document.getElementById("error-msg");
-        errorMsg.textContent = "Credenciales incorrectas";
-        errorMsg.style.display = "block";
-      } else {
-        window.location.href = "dashboard.html";
-      }
-    });
-  }
+  if (inputPass) inputPass.addEventListener("keydown", manejarEnter);
+  if (inputUser) inputUser.addEventListener("keydown", manejarEnter);
 });

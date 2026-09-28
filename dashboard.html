@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panel de Administración - NOVACAMPUS</title>
+    <link rel="stylesheet" href="index.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="dashboard.js" defer></script>
+  </head>
+  <body>
+    <div class="dashboard-header">
+      <h2>NOVACAMPUS - Panel de Control</h2>
+      <div>
+        <span
+          id="info-usuario"
+          style="margin-right: 15px; font-weight: 500"
+        ></span>
+        <button id="btn-cerrar-sesion" class="btn btn-danger">
+          Cerrar Sesión
+        </button>
+      </div>
+    </div>
+
+    <main style="max-width: 1300px; padding: 20px">
+      <div class="dashboard-grid">
+        <!-- Formulario de Creación / Edición -->
+        <div class="content-card" style="border-top: 4px solid #1a3e6c">
+          <h3 id="form-titulo" style="margin-bottom: 15px; color: #1a3e6c">
+            Crear Nueva Publicación
+          </h3>
+
+          <form id="form-publicacion" onsubmit="return false;">
+            <div class="form-group">
+              <label for="titulo">Título *</label>
+              <input
+                type="text"
+                id="titulo"
+                placeholder="Ej: Conferencia de Tecnología"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="contenido">Contenido / Descripción *</label>
+              <textarea
+                id="contenido"
+                rows="4"
+                placeholder="Escribe el detalle de la publicación..."
+                required
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="tipo-pub">Tipo de Publicación</label>
+              <select id="tipo-pub">
+                <option value="Aviso">Aviso</option>
+                <option value="Evento">Evento</option>
+                <option value="Noticia">Noticia</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="fecha-inicio">Fecha de Inicio del Evento</label>
+              <input type="datetime-local" id="fecha-inicio" />
+            </div>
+
+            <div class="form-group">
+              <label for="lugar">Lugar / Salón</label>
+              <select id="lugar">
+                <option value="">Cargando salones...</option>
+              </select>
+            </div>
+
+            <div
+              class="form-group"
+              id="grupo-departamento"
+              style="display: none"
+            >
+              <label for="select-departamento"
+                >Asignar a Departamento (Superusuario)</label
+              >
+              <select id="select-departamento"></select>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 20px">
+              <button type="button" id="btn-publicar" class="btn btn-primary">
+                Guardar Publicación
+              </button>
+              <button
+                type="button"
+                id="btn-cancelar"
+                class="btn btn-danger"
+                style="display: none; width: auto"
+              >
+                Cancelar
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Tabla de Publicaciones -->
+        <div>
+          <h3 style="margin-bottom: 15px; color: #1a3e6c">
+            Publicaciones Registradas
+          </h3>
+          <div class="admin-table-container">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Título</th>
+                  <th>Tipo</th>
+                  <th>Fecha Inicio</th>
+                  <th>Lugar</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="tabla-publicaciones">
+                <tr>
+                  <td colspan="5">Cargando publicaciones...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

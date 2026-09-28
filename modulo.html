@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title id="page-title">Departamento - NOVACAMPUS</title>
+    <link rel="stylesheet" href="index.css" />
+    <!-- Cargar Supabase y la lógica externa -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="modulo.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <div class="logo-container">
+        <div class="logo-icon">:)</div>
+        <div class="logo-text">
+          <h1>NOVACAMPUS</h1>
+          <p>Portal Institucional de Asistencia</p>
+        </div>
+      </div>
+      <button
+        class="menu-toggle"
+        onclick="
+          document.getElementById('menu-principal').classList.toggle('mostrar')
+        "
+      >
+        ☰
+      </button>
+      <div class="header-right">
+        <!-- Agregamos id="input-busqueda" -->
+        <div class="search-bar">
+          <input
+            type="text"
+            id="input-busqueda"
+            placeholder="Buscar en el portal y presiona Enter..."
+          />
+        </div>
+      </div>
+    </header>
+
+    <nav>
+      <ul class="nav-menu" id="menu-principal">
+        <li><a href="index.html">Inicio</a></li>
+        <li class="has-dropdown">
+          <a href="#" onclick="this.parentElement.classList.toggle('abierto')"
+            >Departamentos ▾</a
+          >
+          <ul class="dropdown">
+            <li>
+              <a href="modulo.html?departamento=Servicios escolares"
+                >Servicios escolares</a
+              >
+            </li>
+            <li>
+              <a href="modulo.html?departamento=Actividades Extraescolares"
+                >Actividades Extraescolares</a
+              >
+            </li>
+            <li><a href="modulo.html?departamento=Eventos">Eventos</a></li>
+            <li>
+              <a href="modulo.html?departamento=Lengua extranjera"
+                >Lengua extranjera</a
+              >
+            </li>
+            <li>
+              <a href="modulo.html?departamento=vinculacion">Vinculación</a>
+            </li>
+          </ul>
+        </li>
+        <li><a href="mapa.html">Mapa interactivo</a></li>
+        <li><a href="calendario.html">Calendario</a></li>
+      </ul>
+    </nav>
+
+    <main>
+      <h2 class="section-title" id="titulo-pagina">Cargando...</h2>
+
+      <div class="content-card" id="tarjeta-descripcion">
+        <p id="texto-descripcion">Obteniendo información...</p>
+      </div>
+
+      <!-- Contenedor adaptado para lista de noticias -->
+      <div
+        style="display: flex; flex-direction: column; gap: 20px"
+        id="contenedor-noticias"
+      >
+        <!-- Las tarjetas se generarán con JavaScript -->
+      </div>
+    </main>
+
+    <footer>
+      <p>NOVACAMPUS - Portal Institucional de Ayuda Universitaria</p>
+      <p style="opacity: 0.7; margin-top: 5px">
+        <a href="login.html" style="color: #aaa; text-decoration: none"> © </a>
+        2026 Universidad. Todos los derechos reservados.
+      </p>
+    </footer>
+  </body>
+</html>

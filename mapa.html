@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mapa Interactivo - NOVACAMPUS</title>
+    <link rel="stylesheet" href="mapa.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="mapa.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <div class="logo-container">
+        <div class="logo-icon">:)</div>
+        <div class="logo-text">
+          <h1>NOVACAMPUS</h1>
+          <p>Portal Institucional de Asistencia</p>
+        </div>
+      </div>
+      <button
+        class="menu-toggle"
+        onclick="
+          document.getElementById('menu-principal').classList.toggle('mostrar')
+        "
+      >
+        ☰
+      </button>
+      <div class="header-right">
+        <div class="search-bar">
+          <input
+            type="text"
+            id="input-busqueda-global"
+            placeholder="Buscar en el portal..."
+          />
+        </div>
+      </div>
+    </header>
+
+    <nav>
+      <!-- Tu menú de navegación estándar... -->
+      <ul class="nav-menu" id="menu-principal">
+        <li><a href="index.html">Inicio</a></li>
+        <li class="has-dropdown">
+          <a href="#" onclick="this.parentElement.classList.toggle('abierto')"
+            >Departamentos ▾</a
+          >
+          <ul class="dropdown">
+            <li>
+              <a href="modulo.html?departamento=Servicios escolares"
+                >Servicios escolares</a
+              >
+            </li>
+            <li>
+              <a href="modulo.html?departamento=Actividades Extraescolares"
+                >Actividades Extraescolares</a
+              >
+            </li>
+            <li><a href="modulo.html?departamento=Eventos">Eventos</a></li>
+            <li>
+              <a href="modulo.html?departamento=Lengua extranjera"
+                >Lengua extranjera</a
+              >
+            </li>
+            <li>
+              <a href="modulo.html?departamento=Vinculación">Vinculación</a>
+            </li>
+          </ul>
+        </li>
+        <li><a href="mapa.html">Mapa interactivo</a></li>
+        <li><a href="calendario.html">Calendario</a></li>
+      </ul>
+    </nav>
+
+    <main>
+      <h2 class="section-title">Mapa y Directorio del Campus</h2>
+
+      <div class="mapa-layout">
+        <!-- Panel Izquierdo: Directorio -->
+        <aside class="directorio-panel">
+          <h3>Directorio</h3>
+          <input
+            type="text"
+            id="buscador-lugares"
+            class="buscador-local"
+            placeholder="Buscar salón, edificio o área..."
+          />
+          <ul class="lista-lugares" id="lista-lugares">
+            <li>Cargando lugares...</li>
+          </ul>
+        </aside>
+
+        <!-- Panel Derecho: Mapa y Tarjeta de Info -->
+        <div class="mapa-panel">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3763.7421412415592!2d-99.0529122!3d19.380314800000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1fd0614558e4b%3A0x3760847a107a0b9f!2sTecNM%20%7C%20Tecnol%C3%B3gico%20Nacional%20de%20M%C3%A9xico%20Campus%20Iztapalapa!5e0!3m2!1ses-419!2smx!4v1779684501544!5m2!1ses-419!2smx"
+            width="100%"
+            height="400"
+            style="
+              border: 0;
+              border-radius: 8px;
+              box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            "
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+          ></iframe>
+
+          <!-- Tarjeta dinámica de información -->
+          <div class="info-card" id="tarjeta-info">
+            <h3 id="info-titulo">Nombre del Salón</h3>
+            <p>
+              <strong>Ubicación:</strong>
+              <span id="info-codigo">...</span>
+            </p>
+            <p>
+              <strong>Horario de atención:</strong>
+              <span id="info-horario">...</span>
+            </p>
+            <p style="margin-top: 10px" id="info-descripcion">
+              Descripción del lugar...
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

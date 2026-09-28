@@ -37,6 +37,29 @@ document.addEventListener("DOMContentLoaded", async () => {
         window.location.href = "dashboard.html";
       }
     });
+    //enter
+    // 2. Si NO hay sesión, escuchamos el evento del botón de login
+  const entIngresar = document.getElementById("pass");
+
+  if (entIngresar) {
+    entIngresar.addEventListener("input", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("user").value;
+      const password = document.getElementById("pass").value;
+
+      const { data, error } = await supabaseConn.auth.signInWithPassword({
+        email: email,
+        password: password,
+      });
+
+      if (error) {
+        const errorMsg = document.getElementById("error-msg");
+        errorMsg.textContent = "Credenciales incorrectas";
+        errorMsg.style.display = "block";
+      } else {
+        window.location.href = "dashboard.html";
+      }
+    });
   }
 });
 

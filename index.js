@@ -36,7 +36,7 @@ async function cargarCarrusel() {
     .limit(5);
 
   if (error || !data || data.length === 0) {
-    if (slideContent) slideContent.textContent = "Bienvenido a NOVACAMPUS";
+    slideContent.textContent = "Bienvenido a NOVACAMPUS";
     return;
   }
 
@@ -44,15 +44,13 @@ async function cargarCarrusel() {
   renderizarSlide(0);
 
   // Generar los puntos (dots)
-  if (dotsContainer) {
-    dotsContainer.innerHTML = "";
-    destacados.forEach((_, idx) => {
-      const dot = document.createElement("span");
-      dot.className = `dot ${idx === 0 ? "active" : ""}`;
-      dot.onclick = () => cambiarSlideManual(idx);
-      dotsContainer.appendChild(dot);
-    });
-  }
+  dotsContainer.innerHTML = "";
+  destacados.forEach((_, idx) => {
+    const dot = document.createElement("span");
+    dot.className = `dot ${idx === 0 ? "active" : ""}`;
+    dot.onclick = () => cambiarSlideManual(idx);
+    dotsContainer.appendChild(dot);
+  });
 
   // Iniciar rotación automática cada 4 segundos
   if (intervaloCarrusel) clearInterval(intervaloCarrusel);
@@ -85,11 +83,9 @@ function cambiarSlideManual(index) {
   renderizarSlide(index);
 }
 
-// Carga las noticias procesando y ordenando las fechas del evento correctamente
+// Carga hasta 20 publicaciones recientes de más nuevo a más antiguo
 async function cargarNoticiasPeriodico() {
   const contenedor = document.getElementById("contenedor-noticias");
-  if (!contenedor) return;
-
   contenedor.innerHTML = "<p>Cargando anuncios recientes...</p>";
 
   const { data, error } = await supabaseConn
@@ -103,13 +99,12 @@ async function cargarNoticiasPeriodico() {
       lugar_evento,
       fecha_publicacion,
       departamentos ( nombre )
-    `
+    `,
     )
     .order("fecha_publicacion", { ascending: false })
     .limit(20);
 
   if (error) {
-    console.error("Error devuelto por Supabase:", error);
     contenedor.innerHTML = `<p>Error al cargar anuncios: ${error.message}</p>`;
     return;
   }
@@ -120,64 +115,28 @@ async function cargarNoticiasPeriodico() {
     return;
   }
 
-  // Ordenar por la fecha del evento detectada en JavaScript
-  data.sort((a, b) => {
-    const valA = a.fecha_evento || a.fecha_inicio || a.fecha_publicacion;
-    const valB = b.fecha_evento || b.fecha_inicio || b.fecha_publicacion;
-    return new Date(valA) - new Date(valB);
-  });
-
   contenedor.innerHTML = "";
   data.forEach((pub) => {
-    const fechaString = pub.fecha_evento || pub.fecha_inicio || pub.fecha_publicacion;
-    
-    let fechaFormateada = "";
-    let horaFormateada = "";
-
-    if (fechaString) {
-      // Evitar el desfase de zona horaria restando un día al crear la fecha
-      const partes = fechaString.split("T");
-      const componentesFecha = partes[0].split("-");
-
-      if (componentesFecha.length === 3) {
-        const [anio, mes, dia] = componentesFecha;
-        const fechaObj = new Date(anio, mes - 1, dia);
-
-        fechaFormateada = fechaObj.toLocaleDateString("es-MX", {
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-        });
-      } else {
-        fechaFormateada = new Date(fechaString).toLocaleDateString("es-MX", {
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-        });
-      }
-
-      // Procesar la hora si viene incluida en el ISO string o campo de hora
-      const horaOrigen = pub.hora_inicio || (partes[1] ? partes[1] : null);
-      if (horaOrigen) {
-        const fechaHoraObj = new Date(fechaString);
-        horaFormateada = fechaHoraObj.toLocaleTimeString("es-MX", {
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: true,
-        });
-      }
-    }
+    const fechaObj = new Date(pub.fecha_publicacion);
+    const fechaFormateada = fechaObj.toLocaleDateString("es-MX", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+    const horaFormateada = fechaObj.toLocaleTimeString("es-MX", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
 
     const nombreDepto = pub.departamentos?.nombre || "General";
     const lugar = pub.lugar_evento ? `<span>📍 ${pub.lugar_evento}</span>` : "";
-    const htmlHora = horaFormateada ? `<span>A las ${horaFormateada}</span>` : "";
 
     contenedor.innerHTML += `
       <div class="evento-card">
         <h3>${pub.titulo}</h3>
         <div class="evento-meta">
           <span>El ${fechaFormateada}</span>
-          ${htmlHora}
+          <span>A las ${horaFormateada}</span>
           ${lugar}
         </div>
         <p>${pub.contenido}</p>

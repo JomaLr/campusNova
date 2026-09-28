@@ -80,8 +80,8 @@ async function cargarSelectSalones() {
 
   const { data: salonesList, error } = await supabaseConn
     .from("salones")
-    .select("id, codigo")
-    .order("codigo", { ascending: true });
+    .select("id, nombre")
+    .order("nombre", { ascending: true });
 
   select.innerHTML =
     '<option value="">-- Selecciona un salón/lugar --</option>';
@@ -93,7 +93,7 @@ async function cargarSelectSalones() {
 
   if (salonesList) {
     salonesList.forEach((s) => {
-      select.innerHTML += `<option value="${s.codigo}">${s.codigo}</option>`;
+      select.innerHTML += `<option value="${s.nombre}">${s.nombre}</option>`;
     });
   }
 }

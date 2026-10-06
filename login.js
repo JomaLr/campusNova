@@ -1,7 +1,7 @@
 // Conexión con la DB
-const supabaseUrl = "https://pjuabhjyxekejoqfwxpt.supabase.co";
-const supabaseKey = "sb_publishable_6A8SA8l_ryXomSoo2N66bg_CB5A9YKd";
-const supabaseConn = window.supabase.createClient(supabaseUrl, supabaseKey);
+const BASE_URL = CONFIG.SUPABASE_URL;
+const BASE_ANON_KEY = CONFIG.SUPABASE_ANON_KEY;
+const supabaseConn = window.supabase.createClient(BASE_URL, BASE_ANON_KEY);
 
 document.addEventListener("DOMContentLoaded", async () => {
   // 1. Verificar si YA existe una sesión activa

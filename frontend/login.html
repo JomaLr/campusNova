@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - NOVACAMPUS</title>
+    <link rel="stylesheet" href="css/index.css" />
+    <!-- Supabase CDN (Necesario para que la variable 'supabase' exista) -->
+     <script src="js/config.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Tu archivo lógico -->
+    <script src="js/login.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <div class="logo-container">
+        <a href="index.html"> <div class="logo-icon">:)</div></a>
+        <div class="logo-text">
+          <h1>NOVACAMPUS</h1>
+          <p>Acceso Administrativo</p>
+        </div>
+      </div>
+      <div class="header-right" style="text-align: right">
+        <a href="index.html" style="color: white; text-decoration: none"
+          >← Volver al sitio público</a
+        >
+      </div>
+    </header>
+
+    <main>
+      <div class="login-container">
+        <h2>Iniciar Sesión</h2>
+        <div class="form-group">
+          <label>Correo Electrónico</label>
+          <input
+            type="email"
+            id="user"
+            placeholder="ejemplo@universidad.com"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label>Contraseña</label>
+          <input type="password" id="pass" placeholder="••••••••" required />
+        </div>
+        <button class="btn btn-primary" id="btn-ingresar">Ingresar</button>
+        <p
+          id="error-msg"
+          style="
+            color: red;
+            margin-top: 10px;
+            text-align: center;
+            display: none;
+          "
+        >
+          Usuario incorrecto
+        </p>
+      </div>
+    </main>
+  </body>
+</html>

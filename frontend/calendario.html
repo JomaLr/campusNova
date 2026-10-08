@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calendario - NOVACAMPUS</title>
+    <link rel="stylesheet" href="css/calendario.css" />
+    <!-- Scripts -->
+     <script src="js/config.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/calendario.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <div class="logo-container">
+        <a href="index.html"> <div class="logo-icon">:)</div></a>
+        <div class="logo-text">
+          <h1>NOVACAMPUS</h1>
+          <p>Portal Institucional de Asistencia</p>
+        </div>
+      </div>
+      <button
+        class="menu-toggle"
+        onclick="
+          document.getElementById('menu-principal').classList.toggle('mostrar')
+        "
+      >
+        ☰
+      </button>
+      <div class="header-right">
+        <div class="search-bar">
+          <input
+            type="text"
+            id="input-busqueda"
+            placeholder="Buscar en el portal..."
+          />
+        </div>
+      </div>
+    </header>
+
+    <nav>
+      <ul class="nav-menu" id="menu-principal">
+        <li><a href="index.html">Inicio</a></li>
+        <li class="has-dropdown">
+          <a href="#" onclick="this.parentElement.classList.toggle('abierto')"
+            >Departamentos ▾</a
+          >
+          <ul class="dropdown">
+            <li>
+              <a href="modulo.html?departamento=Servicios escolares"
+                >Servicios escolares</a
+              >
+            </li>
+            <li>
+              <a href="modulo.html?departamento=Actividades Extraescolares"
+                >Actividades Extraescolares</a
+              >
+            </li>
+            <li><a href="modulo.html?departamento=Eventos">Eventos</a></li>
+            <li>
+              <a href="modulo.html?departamento=Lengua extranjera"
+                >Lengua extranjera</a
+              >
+            </li>
+            <li>
+              <a href="modulo.html?departamento=Vinculación">Vinculación</a>
+            </li>
+          </ul>
+        </li>
+        <li><a href="mapa.html">Mapa interactivo</a></li>
+        <li><a href="calendario.html">Calendario</a></li>
+      </ul>
+    </nav>
+
+    <main>
+      <h2 class="section-title">Calendario Institucional</h2>
+
+      <div class="calendar-container">
+        <div class="calendar-controls">
+          <button class="btn-calendar" id="btn-prev">◀ Anterior</button>
+          <h3 id="mes-anio">Cargando...</h3>
+          <button class="btn-calendar" id="btn-next">Siguiente ▶</button>
+        </div>
+
+        <div class="calendar-grid" id="calendario-grid">
+          <!-- El encabezado de los días y las celdas se inyectarán con JS -->
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p>NOVACAMPUS - Portal Institucional de Ayuda Universitaria</p>
+      <p style="opacity: 0.7; margin-top: 5px">
+        <a href="login.html" style="color: #aaa; text-decoration: none"> © </a
+        >2026 Universidad. Todos los derechos reservados.
+      </p>
+    </footer>
+  </body>
+</html>

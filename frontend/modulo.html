@@ -3,12 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Calendario - NOVACAMPUS</title>
-    <link rel="stylesheet" href="calendario.css" />
-    <!-- Scripts -->
-     <script src="config.js" defer></script>
+    <title id="page-title">Departamento - NOVACAMPUS</title>
+    <link rel="stylesheet" href="css/index.css" />
+    <!-- Cargar Supabase y la lógica externa -->
+     <script src="js/config.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="calendario.js" defer></script>
+    <script src="js/modulo.js" defer></script>
   </head>
   <body>
     <header>
@@ -28,11 +28,12 @@
         ☰
       </button>
       <div class="header-right">
+        <!-- Agregamos id="input-busqueda" -->
         <div class="search-bar">
           <input
             type="text"
             id="input-busqueda"
-            placeholder="Buscar en el portal..."
+            placeholder="Buscar en el portal y presiona Enter..."
           />
         </div>
       </div>
@@ -63,7 +64,7 @@
               >
             </li>
             <li>
-              <a href="modulo.html?departamento=Vinculación">Vinculación</a>
+              <a href="modulo.html?departamento=vinculacion">Vinculación</a>
             </li>
           </ul>
         </li>
@@ -73,26 +74,26 @@
     </nav>
 
     <main>
-      <h2 class="section-title">Calendario Institucional</h2>
+      <h2 class="section-title" id="titulo-pagina">Cargando...</h2>
 
-      <div class="calendar-container">
-        <div class="calendar-controls">
-          <button class="btn-calendar" id="btn-prev">◀ Anterior</button>
-          <h3 id="mes-anio">Cargando...</h3>
-          <button class="btn-calendar" id="btn-next">Siguiente ▶</button>
-        </div>
+      <div class="content-card" id="tarjeta-descripcion">
+        <p id="texto-descripcion">Obteniendo información...</p>
+      </div>
 
-        <div class="calendar-grid" id="calendario-grid">
-          <!-- El encabezado de los días y las celdas se inyectarán con JS -->
-        </div>
+      <!-- Contenedor adaptado para lista de noticias -->
+      <div
+        style="display: flex; flex-direction: column; gap: 20px"
+        id="contenedor-noticias"
+      >
+        <!-- Las tarjetas se generarán con JavaScript -->
       </div>
     </main>
 
     <footer>
       <p>NOVACAMPUS - Portal Institucional de Ayuda Universitaria</p>
       <p style="opacity: 0.7; margin-top: 5px">
-        <a href="login.html" style="color: #aaa; text-decoration: none"> © </a
-        >2026 Universidad. Todos los derechos reservados.
+        <a href="login.html" style="color: #aaa; text-decoration: none"> © </a>
+        2026 Universidad. Todos los derechos reservados.
       </p>
     </footer>
   </body>

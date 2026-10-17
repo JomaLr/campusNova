@@ -1,3 +1,5 @@
+.env
+
 # Archivos con credenciales reales (Backend y Frontend)
 backend/.env
 # frontend/js/config.js

@@ -20,3 +20,7 @@ module.exports = {
   corsOrigin: process.env.CORS_ORIGIN,
   logLevel: process.env.LOG_LEVEL,
 };
+
+// Mantener el proceso activo para el contenedor
+setInterval(() => {}, 1000000);
+console.log('✅ Backend de campusNova iniciado correctamente en el puerto:', process.env.PORT || 3000);

@@ -1,51 +1,41 @@
 # campusNova
 
-Plataforma web cloud-native para la gestión y consulta centralizada de recursos académicos campusNova.
+Plataforma y portal escolar integrando arquitectura distribuida con Docker Compose, NGINX como servidor web y API REST documentada con Swagger UI / OpenAPI.
 
-## Equipo
-- Rivera Sánchez Damian / Equipo NOVACAMPUS
-- Guzman Gonzalez Abigail / Equipo NOVACAMPUS
-- Lopez Rivera Jose Manuel / Equipo NOVACAMPUS
-- Velasco Zavala Gerardo Jesus / Equipo NOVACAMPUS
-- De Jesus Sánchez Iran David / Equipo NOVACAMPUS
+## Requisitos
+- [Docker Desktop](https://www.docker.com/) (incluye Docker Compose)
+- [Git](https://git-scm.com/)
 
-## Tecnologías
-- Backend: Supabase (PostgreSQL + REST API)
-- Base de datos: PostgreSQL (gestionada en la nube)
-- Frontend: HTML5, CSS3, JavaScript Vanilla (ES6+)
-- API de terceros: Supabase JS Client (https://supabase.com/docs)
+## Instalación y ejecución
+1. Clonar el repositorio:
+   git clone https://github.com/JomaLr/campusNova.git
+   cd campusNova
 
-## Requisitos previos
-- Navegador web moderno (Chrome, Firefox, Edge, Safari)
-- Extensión Live Server en VS Code o cualquier servidor de archivos estáticos
+2. Configurar las variables de entorno:
+   cp .env.example .env
+   (Editar el archivo .env agregando las credenciales correspondientes de Supabase/MySQL)
 
-## Instalación
-1. Clonar el repositorio: `git clone https://github.com/tu-usuario/campusNova.git`
-2. Entrar a la carpeta del proyecto: `cd campusNova`
-3. Instalar dependencias del backend (opcional): `cd backend && npm install`
-4. Copiar `.env.example` a `.env` y completar los valores
-5. Abrir la carpeta `frontend/` y ejecutar `index.html` con Live Server
+3. Levantar la aplicación con Docker Compose:
+   docker compose up -d --build
+
+## Accesos
+- Frontend (NGINX): http://localhost:8080
+- API Backend: http://localhost:3000
+- Documentación Swagger UI: http://localhost:3000/api-docs
 
 ## Variables de entorno
-| Variable | Descripción | Ejemplo |
-|----------|---------------------------------|-----------------------------------|
-| PORT | Puerto del servidor backend | 3000 |
-| SUPABASE_URL | URL del proyecto en Supabase | https://xyzcompany.supabase.co |
-| SUPABASE_ANON_KEY| Llave pública de API del cliente| eyJhbGciOiJIUzI1NiIsInR5cCI6... |
 
-## Endpoints
+| Variable | Descripción | Valor por defecto / Ejemplo |
+| --- | --- | --- |
+| PORT | Puerto de escucha del backend Express | 3000 |
+| NODE_ENV | Entorno de ejecución de Node.js | development |
+| SUPABASE_URL | URL del proyecto Supabase | https://tu-proyecto.supabase.co |
+| SUPABASE_ANON_KEY | Clave pública anónima de Supabase | tu-anon-key |
+| CORS_ORIGIN | Orígenes permitidos para peticiones CORS | * |
+| LOG_LEVEL | Nivel de logs de la aplicación | info |
 
-| Método | Ruta | Descripción | Códigos de respuesta |
-|--------|--------------------------|----------------------------------------|----------------------|
-| GET | /rest/v1/publicaciones | Obtiene el listado de publicaciones | 200 |
-| POST | /rest/v1/publicaciones | Crea una nueva publicación | 201, 400 |
-| GET | /rest/v1/departamentos | Consulta los departamentos del campus | 200 |
-| GET | /rest/v1/salones | Consulta la información de salones | 200 |
-| GET | /rest/v1/usuarios | Consulta el perfil de usuarios | 200 |
-| POST | /auth/v1/token | Autenticación y generación de tokens | 200, 400 |
-
-## Pruebas
-Página 404 personalizada en `frontend/404.html`.
+## Detener el proyecto
+docker compose down
 
 ## Licencia
-Distribuido bajo licencia MIT. Ver el archivo `LICENSE`.
+MIT (ver archivo LICENSE)

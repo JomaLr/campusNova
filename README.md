@@ -34,6 +34,19 @@ Plataforma y portal escolar integrando arquitectura distribuida con Docker Compo
 | CORS_ORIGIN | Orígenes permitidos para peticiones CORS | * |
 | LOG_LEVEL | Nivel de logs de la aplicación | info |
 
+# Auditoría de Calidad y Distribución - campusNova
+
+| Ítem | Criterio de Evaluación | Estado Inicial | Estado después de Práctica 2 | Evidencia / Ruta |
+| --- | --- | --- | --- | --- |
+| 1 | Dockerfile de Backend | Pendiente | OK | `backend/Dockerfile` |
+| 2 | Uso de `.dockerignore` | Pendiente | OK | `backend/.dockerignore` |
+| 3 | Orquestación con Docker Compose | Pendiente | OK | `docker-compose.yml` |
+| 14 | Gestión de variables `.env` | Pendiente | OK | `.env.example` y `.gitignore` |
+| 15 | Especificación OpenAPI | Pendiente | OK | `backend/openapi.yaml` |
+| 16 | Documentación interactiva Swagger UI | Pendiente | OK | `http://localhost:3000/api-docs` |
+| 17 | README.md con guía de instalación | Pendiente | OK | `README.md` |
+| 18 | Versionado y Release | Pendiente | OK | Release `v1.0.0` en GitHub |
+
 ## Detener el proyecto
 docker compose down
 

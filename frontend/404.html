@@ -4,14 +4,32 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Página no encontrada | NOVACAMPUS</title>
-    <link rel="icon" href="img/logo.png" type="image/png" />
-    <link rel="stylesheet" href="css/index.css" />
+    <meta name="theme-color" content="#1b396a">
+    <link rel="icon" href="/img/logo-mark.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <!-- Rutas absolutas: NGINX sirve esta página para cualquier URL inexistente, incluso en subrutas -->
+    <link rel="stylesheet" href="/css/index.css" />
+    <style>
+      .nf { flex: 1; display: grid; place-items: center; padding: 3rem var(--gutter); text-align: center;
+        background: radial-gradient(40rem 24rem at 50% 0%, rgba(201,150,43,.16), transparent 70%), var(--bg); }
+      .nf-code { font-family: var(--font-display); font-weight: 700; font-size: clamp(6rem, 22vw, 11rem); line-height: .9; letter-spacing: -0.05em;
+        color: var(--brand-700); display: inline-flex; align-items: center; gap: .02em; }
+      .nf-code img { width: .72em; height: .72em; filter: none; animation: float 3.2s ease-in-out infinite; }
+      .nf h1 { font-family: var(--font-display); font-size: clamp(1.6rem, 4vw, 2.2rem); font-weight: 600; margin: 1.25rem 0 .6rem; }
+      .nf p { color: var(--muted); max-width: 44ch; margin: 0 auto 2rem; }
+      @keyframes float { 50% { transform: translateY(-8px) rotate(-4deg); } }
+    </style>
 </head>
-<body style="text-align: center; padding: 60px 20px; font-family: sans-serif;">
-    <h1 style="font-size: 80px; color: #6b1d2f; margin-bottom: 0;">404</h1>
-    <h2 style="margin-top: 10px;">Página no encontrada</h2>
-    <p style="color: #555;">La página que intentas consultar no existe o cambió de dirección.</p>
-    <br>
-    <a href="index.html" style="background-color: #6b1d2f; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">Volver al inicio</a>
+<body>
+    <main class="nf">
+      <div>
+        <div class="nf-code" aria-hidden="true">4<img src="/img/logo-mark.png" alt="" />4</div>
+        <h1>Página no encontrada</h1>
+        <p>La página que intentas consultar no existe o cambió de dirección.</p>
+        <a class="btn btn-primary" href="/index.html">Volver al inicio</a>
+      </div>
+    </main>
 </body>
 </html>

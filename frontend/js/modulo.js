@@ -38,7 +38,7 @@ async function cargarModulo() {
   } else if (deptoFiltro) {
     pageTitle.textContent = `${deptoFiltro} - NOVACAMPUS`;
     tituloPagina.textContent = deptoFiltro;
-    textoDesc.innerHTML = `Estás en el apartado público de <strong>${deptoFiltro}</strong>. Aquí puedes consultar la información y avisos correspondientes a esta área.`;
+    textoDesc.innerHTML = `Estás en el apartado público de <strong>${NC.esc(deptoFiltro)}</strong>. Aquí puedes consultar la información y avisos correspondientes a esta área.`;
   } else {
     tituloPagina.textContent = "Publicaciones Generales";
     textoDesc.textContent =
@@ -67,7 +67,15 @@ async function cargarModulo() {
       `titulo.ilike.%${terminoBusqueda}%,contenido.ilike.%${terminoBusqueda}%`,
     );
   } else if (deptoFiltro) {
-    query = query.eq("departamentos.nombre", deptoFiltro);
+    // ilike + "_" en vocales acentuadas: el mismo enlace funciona con
+    // "Vinculación", "vinculacion", etc. (los menús tenían ambas variantes).
+    const patron = deptoFiltro.replace(/[áéíóúÁÉÍÓÚñÑ]/g, "_");
+    query = query.ilike("departamentos.nombre", patron);
+  }
+
+  const contenedor = document.getElementById("contenedor-noticias");
+  if (contenedor) {
+    contenedor.innerHTML = '<div class="skeleton"></div><div class="skeleton"></div>';
   }
 
   const { data, error } = await query;
@@ -78,22 +86,31 @@ function renderizarNoticias(data, error) {
   const contenedor = document.getElementById("contenedor-noticias");
 
   if (error) {
-    contenedor.innerHTML = `<p style="color: red;">Error al cargar publicaciones: ${error.message}</p>`;
+    contenedor.innerHTML = `<div class="state state--error">${NC.icon("alert-circle")}<strong>Error al cargar publicaciones</strong><span>${NC.esc(error.message)}</span></div>`;
     return;
   }
 
   if (!data || data.length === 0) {
     contenedor.innerHTML = `
-      <div class="content-card" style="text-align: center; color: #666;">
-        No se encontraron publicaciones con estos criterios.
+      <div class="state">${NC.icon("inbox")}<strong>Sin resultados</strong>
+        <span>No se encontraron publicaciones con estos criterios.</span>
+        <a class="btn btn-ghost btn-sm" href="index.html" style="margin-top:.5rem">Volver al inicio</a>
       </div>`;
     return;
   }
 
   contenedor.innerHTML = "";
 
+  const conteo = document.getElementById("conteo-resultados");
+  if (conteo) {
+    conteo.textContent = `${data.length} publicación${data.length === 1 ? "" : "es"}`;
+    conteo.hidden = false;
+  }
+
+  const iconos = { aviso: "bell", evento: "calendar", noticia: "newspaper" };
+
   // Formato de Lista apilada usando la clase evento-card
-  data.forEach((pub) => {
+  data.forEach((pub, i) => {
     const fechaObj = new Date(pub.fecha_publicacion);
     const fechaFormateada = fechaObj.toLocaleDateString("es-MX", {
       year: "numeric",
@@ -105,21 +122,28 @@ function renderizarNoticias(data, error) {
       minute: "2-digit",
     });
     const nombreDepto = pub.departamentos?.nombre || "General";
-    const lugar = pub.lugar_evento ? `<span>📍 ${pub.lugar_evento}</span>` : "";
+    const lugar = pub.lugar_evento
+      ? `<span>${NC.icon("map-pin")}${NC.esc(pub.lugar_evento)}</span>`
+      : "";
+    const t = (pub.tipo || "").toLowerCase();
+    const chip = t
+      ? `<span class="chip chip--${NC.esc(t)}">${NC.icon(iconos[t] || "info")}${NC.esc(pub.tipo)}</span>`
+      : "";
 
     contenedor.innerHTML += `
-      <div class="evento-card" style="width: 100%; box-sizing: border-box; display: flex; flex-direction: column;">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap;">
-          <h3 style="margin-top: 0; font-size: 1.4rem;">${pub.titulo}</h3>
-          <span class="depto-tag" style="margin-top: 0; margin-bottom: 10px;">${nombreDepto}</span>
+      <article class="evento-card evento-card--lista" style="animation-delay: ${Math.min(i, 8) * 50}ms">
+        <div class="evento-top">
+          ${chip}
+          <span class="depto-tag">${NC.esc(nombreDepto)}</span>
         </div>
-        <div class="evento-meta" style="margin-top: 5px; margin-bottom: 15px;">
-          <span>El  ${fechaFormateada}</span>
-          <span>A las ${horaFormateada}</span>
+        <h3>${NC.esc(pub.titulo)}</h3>
+        <div class="evento-meta">
+          <span>${NC.icon("calendar")}El ${NC.esc(fechaFormateada)}</span>
+          <span>${NC.icon("clock")}A las ${NC.esc(horaFormateada)}</span>
           ${lugar}
         </div>
-        <p style="color: #444; line-height: 1.6;">${pub.contenido}</p>
-      </div>
+        <p>${NC.esc(pub.contenido)}</p>
+      </article>
     `;
   });
 }

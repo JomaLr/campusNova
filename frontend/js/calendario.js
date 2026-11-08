@@ -25,6 +25,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   document
     .getElementById("btn-next")
     .addEventListener("click", () => cambiarMes(1));
+  document.getElementById("btn-hoy").addEventListener("click", () => {
+    fechaActual = new Date();
+    renderizarCalendario();
+  });
 
   // 3. Cargar eventos de la base de datos
   await obtenerEventos();
@@ -47,6 +51,8 @@ async function obtenerEventos() {
 }
 
 function cambiarMes(direccion) {
+  // Fijar el día 1 evita saltos de mes (p. ej. 31 de enero + 1 mes → marzo)
+  fechaActual.setDate(1);
   fechaActual.setMonth(fechaActual.getMonth() + direccion);
   renderizarCalendario();
 }
@@ -65,6 +71,7 @@ function renderizarCalendario() {
   tituloMes.textContent = `${nombreMes} ${anio}`;
 
   grid.innerHTML = "";
+  ocultarDetalle();
 
   // Cabecera de días de la semana
   const diasSemana = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
@@ -117,6 +124,25 @@ function renderizarCalendario() {
       );
     });
 
+    // Al elegir un día con eventos se muestra su detalle debajo del calendario
+    if (eventosDelDia.length > 0) {
+      celda.classList.add("has-events");
+      celda.tabIndex = 0;
+      celda.setAttribute("role", "button");
+      celda.setAttribute(
+        "aria-label",
+        `${dia} de ${nombreMes}: ${eventosDelDia.length} evento${eventosDelDia.length === 1 ? "" : "s"}`,
+      );
+      const abrir = () => mostrarDetalleDia(celda, dia, eventosDelDia);
+      celda.addEventListener("click", abrir);
+      celda.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          abrir();
+        }
+      });
+    }
+
     // Añadir insignias de eventos
     eventosDelDia.forEach((evt) => {
       const badge = document.createElement("div");
@@ -137,4 +163,57 @@ function renderizarCalendario() {
 
     grid.appendChild(celda);
   }
+}
+
+// ---------- Detalle del día seleccionado ----------
+function ocultarDetalle() {
+  const panel = document.getElementById("dia-detalle");
+  if (panel) {
+    panel.hidden = true;
+    panel.innerHTML = "";
+  }
+}
+
+function mostrarDetalleDia(celda, dia, eventos) {
+  const panel = document.getElementById("dia-detalle");
+  if (!panel) return;
+
+  document
+    .querySelectorAll(".calendar-cell.selected")
+    .forEach((el) => el.classList.remove("selected"));
+  celda.classList.add("selected");
+
+  const fecha = new Date(fechaActual.getFullYear(), fechaActual.getMonth(), dia);
+  const titulo = fecha.toLocaleDateString("es-MX", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+
+  const ordenados = [...eventos].sort(
+    (a, b) => new Date(a.fecha_inicio) - new Date(b.fecha_inicio),
+  );
+
+  panel.innerHTML = `
+    <h3>${NC.esc(titulo)}</h3>
+    <ul>
+      ${ordenados
+        .map((evt) => {
+          const hora = new Date(evt.fecha_inicio).toLocaleTimeString("es-MX", {
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+          const t = (evt.tipo || "").toLowerCase();
+          return `<li class="day-item">
+            <time>${NC.esc(hora)}</time>
+            <strong>${NC.esc(evt.titulo)}</strong>
+            <small>${t ? `<span class="chip chip--${NC.esc(t)}">${NC.esc(evt.tipo)}</span>` : ""}
+              ${NC.icon("map-pin")}${NC.esc(evt.lugar_evento || "Por definir")}</small>
+          </li>`;
+        })
+        .join("")}
+    </ul>`;
+  panel.hidden = false;
+  panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }

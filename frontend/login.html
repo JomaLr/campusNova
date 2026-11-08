@@ -6,59 +6,68 @@
     <title>Login - NOVACAMPUS</title>
     <meta name="description" content="Inicia sesión en la plataforma NOVACAMPUS.">
     <meta name="author" content="Equipo campusNova">
-    <link rel="icon" href="img/logo.png" type="image/png">
+    <meta name="theme-color" content="#1b396a">
+    <link rel="icon" href="img/logo-mark.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="css/index.css" />
-    <!-- Supabase CDN (Necesario para que la variable 'supabase' exista) -->
-     <script src="js/config.js" defer></script>
+    <!-- Supabase: configuración, librería y scripts de la página -->
+    <script src="js/config.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Tu archivo lógico -->
+    <script src="js/ui.js" defer></script>
     <script src="js/login.js" defer></script>
   </head>
-  <body>
-    <header>
-      <div class="logo-container">
-        <a href="index.html"> <div class="logo-icon">:)</div></a>
-        <div class="logo-text">
-          <h1>NOVACAMPUS</h1>
-          <p>Acceso Administrativo</p>
+  <body class="auth-body">
+    <div class="auth">
+      <aside class="auth-aside">
+        <a class="brand" href="index.html" aria-label="NOVACAMPUS, ir al inicio">
+          <span class="brand-mark"><img src="img/logo-mark.png" alt="" width="28" height="28" /></span>
+          <span class="brand-text"><strong>NOVACAMPUS</strong><small>Acceso Administrativo</small></span>
+        </a>
+        <div>
+          <h2>Gestiona la información de tu departamento.</h2>
+          <p>Publica avisos, eventos y noticias que llegan en tiempo real a toda la comunidad universitaria.</p>
         </div>
-      </div>
-      <div class="header-right" style="text-align: right">
-        <a href="index.html" style="color: white; text-decoration: none"
-          >← Volver al sitio público</a
-        >
-      </div>
-    </header>
+        <ul class="auth-points">
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"></use></svg>Publicaciones por departamento</li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"></use></svg>Calendario sincronizado automáticamente</li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg>Acceso protegido con autenticación</li>
+        </ul>
+      </aside>
 
-    <main>
-      <div class="login-container">
-        <h2>Iniciar Sesión</h2>
-        <div class="form-group">
-          <label>Correo Electrónico</label>
-          <input
-            type="email"
-            id="user"
-            placeholder="ejemplo@universidad.com"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <label>Contraseña</label>
-          <input type="password" id="pass" placeholder="••••••••" required />
-        </div>
-        <button class="btn btn-primary" id="btn-ingresar">Ingresar</button>
-        <p
-          id="error-msg"
-          style="
-            color: red;
-            margin-top: 10px;
-            text-align: center;
-            display: none;
-          "
+      <main class="auth-main" id="contenido" tabindex="-1">
+        <form class="login-container" id="form-login" novalidate>
+          <h2>Iniciar Sesión</h2>
+          <p class="sub">Ingresa con tu cuenta institucional para continuar.</p>
+
+          <div class="form-group">
+            <label for="user">Correo Electrónico</label>
+            <div class="input-wrap">
+              <svg class="icon" aria-hidden="true"><use href="#i-mail"></use></svg>
+              <input type="email" id="user" placeholder="ejemplo@universidad.com" autocomplete="username" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="pass">Contraseña</label>
+            <div class="input-wrap has-toggle">
+              <svg class="icon" aria-hidden="true"><use href="#i-lock"></use></svg>
+              <input type="password" id="pass" placeholder="••••••••" autocomplete="current-password" required />
+              <button type="button" class="toggle-pass" id="toggle-pass" aria-label="Mostrar contraseña" aria-pressed="false">
+                <svg class="icon" aria-hidden="true"><use href="#i-eye"></use></svg>
+              </button>
+            </div>
+          </div>
+
+          <button class="btn btn-primary btn-block" id="btn-ingresar" type="button">Ingresar</button>
+          <p id="error-msg" class="error-msg" role="alert">
+            Usuario incorrecto
+          </p>
+        </form>
+        <a class="back-link" href="index.html"
+          ><svg class="icon" aria-hidden="true"><use href="#i-arrow-left"></use></svg>Volver al sitio público</a
         >
-          Usuario incorrecto
-        </p>
-      </div>
-    </main>
+      </main>
+    </div>
   </body>
 </html>

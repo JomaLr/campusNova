@@ -6,97 +6,67 @@
     <title>Calendario - NOVACAMPUS</title>
     <meta name="description" content="Calendario institucional de la plataforma NOVACAMPUS.">
     <meta name="author" content="Equipo campusNova">
-    <link rel="icon" href="img/logo.png" type="image/png">
+    <meta name="theme-color" content="#1b396a">
+    <link rel="icon" href="img/logo-mark.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/index.css" />
     <link rel="stylesheet" href="css/calendario.css" />
-    <!-- Scripts -->
-     <script src="js/config.js" defer></script>
+    <!-- Supabase: configuración, librería y scripts de la página -->
+    <script src="js/config.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/ui.js" defer></script>
     <script src="js/calendario.js" defer></script>
   </head>
-  <body>
-    <header>
-      <div class="logo-container">
-        <a href="index.html"> <div class="logo-icon">:)</div></a>
-        <div class="logo-text">
-          <h1>NOVACAMPUS</h1>
-          <p>Portal Institucional de Asistencia</p>
-        </div>
-      </div>
-      <button
-        class="menu-toggle"
-        onclick="
-          document.getElementById('menu-principal').classList.toggle('mostrar')
-        "
-      >
-        ☰
-      </button>
-      <div class="header-right">
-        <div class="search-bar">
-          <input
-            type="text"
-            id="input-busqueda"
-            placeholder="Buscar en el portal..."
-          />
-        </div>
-      </div>
-    </header>
+  <body data-page="calendario">
+    <div id="shell-header"></div>
 
-    <nav>
-      <ul class="nav-menu" id="menu-principal">
-        <li><a href="index.html">Inicio</a></li>
-        <li class="has-dropdown">
-          <a href="#" onclick="this.parentElement.classList.toggle('abierto')"
-            >Departamentos ▾</a
-          >
-          <ul class="dropdown">
-            <li>
-              <a href="modulo.html?departamento=Servicios escolares"
-                >Servicios escolares</a
-              >
-            </li>
-            <li>
-              <a href="modulo.html?departamento=Actividades Extraescolares"
-                >Actividades Extraescolares</a
-              >
-            </li>
-            <li><a href="modulo.html?departamento=Eventos">Eventos</a></li>
-            <li>
-              <a href="modulo.html?departamento=Lengua extranjera"
-                >Lengua extranjera</a
-              >
-            </li>
-            <li>
-              <a href="modulo.html?departamento=Vinculación">Vinculación</a>
-            </li>
-          </ul>
-        </li>
-        <li><a href="mapa.html">Mapa interactivo</a></li>
-        <li><a href="calendario.html">Calendario</a></li>
-      </ul>
-    </nav>
-
-    <main>
-      <h2 class="section-title">Calendario Institucional</h2>
-
-      <div class="calendar-container">
-        <div class="calendar-controls">
-          <button class="btn-calendar" id="btn-prev">◀ Anterior</button>
-          <h3 id="mes-anio">Cargando...</h3>
-          <button class="btn-calendar" id="btn-next">Siguiente ▶</button>
+    <main id="contenido" tabindex="-1">
+      <section class="page-hero">
+        <div class="container">
+          <nav class="breadcrumb" aria-label="Ruta de navegación">
+            <a href="index.html">Inicio</a>
+            <svg class="icon" aria-hidden="true"><use href="#i-chevron-right"></use></svg>
+            <span>Calendario</span>
+          </nav>
+          <h1 class="section-title">Calendario Institucional</h1>
+          <p>Todos los eventos y avisos con fecha programada. Selecciona un día para ver el detalle.</p>
         </div>
+      </section>
 
-        <div class="calendar-grid" id="calendario-grid">
-          <!-- El encabezado de los días y las celdas se inyectarán con JS -->
+      <section class="page-body">
+        <div class="container">
+          <div class="calendar-container">
+            <div class="calendar-controls">
+              <h3 id="mes-anio" aria-live="polite">Cargando...</h3>
+              <div class="cal-nav">
+                <button class="btn-calendar" id="btn-prev" type="button" aria-label="Mes anterior">
+                  <svg class="icon" aria-hidden="true"><use href="#i-chevron-left"></use></svg><span class="lbl">Anterior</span>
+                </button>
+                <button class="btn-calendar is-today" id="btn-hoy" type="button">Hoy</button>
+                <button class="btn-calendar" id="btn-next" type="button" aria-label="Mes siguiente">
+                  <span class="lbl">Siguiente</span><svg class="icon" aria-hidden="true"><use href="#i-chevron-right"></use></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="calendar-grid" id="calendario-grid">
+              <!-- El encabezado de los días y las celdas se inyectarán con JS -->
+            </div>
+
+            <div class="calendar-legend" aria-label="Leyenda">
+              <span><i class="l-evento"></i>Evento</span>
+              <span><i class="l-aviso"></i>Aviso</span>
+              <span><i class="l-noticia"></i>Noticia</span>
+            </div>
+          </div>
+
+          <div class="day-detail" id="dia-detalle" hidden></div>
         </div>
-      </div>
+      </section>
     </main>
 
-    <footer>
-      <p>NOVACAMPUS - Portal Institucional de Ayuda Universitaria</p>
-      <p style="opacity: 0.7; margin-top: 5px">
-        <a href="login.html" style="color: #aaa; text-decoration: none"> © </a
-        >2026 Universidad. Todos los derechos reservados.
-      </p>
-    </footer>
+    <div id="shell-footer"></div>
   </body>
 </html>

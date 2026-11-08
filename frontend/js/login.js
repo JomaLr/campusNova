@@ -27,15 +27,27 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Ocultar mensaje de error previo si existe
     if (errorMsg) errorMsg.style.display = "none";
 
+    // Estado de carga: evita envíos dobles mientras se valida
+    const btn = document.getElementById("btn-ingresar");
+    const textoBtn = btn ? btn.textContent : "";
+    if (btn) {
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner" aria-hidden="true"></span> Ingresando...';
+    }
+
     const { data, error } = await supabaseConn.auth.signInWithPassword({
       email: email,
       password: password,
     });
 
     if (error) {
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = textoBtn;
+      }
       if (errorMsg) {
         errorMsg.textContent = "Credenciales incorrectas";
-        errorMsg.style.display = "block";
+        errorMsg.style.display = "flex";
       }
     } else {
       window.location.href = "dashboard.html";
@@ -64,4 +76,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   if (inputUser) inputUser.addEventListener("keydown", manejarEnter);
   if (inputPass) inputPass.addEventListener("keydown", manejarEnter);
+
+  // 5. Mostrar / ocultar contraseña
+  const btnVer = document.getElementById("toggle-pass");
+  if (btnVer && inputPass) {
+    btnVer.addEventListener("click", () => {
+      const visible = inputPass.type === "text";
+      inputPass.type = visible ? "password" : "text";
+      btnVer.setAttribute("aria-pressed", String(!visible));
+      btnVer.setAttribute("aria-label", visible ? "Mostrar contraseña" : "Ocultar contraseña");
+      btnVer.innerHTML = NC.icon(visible ? "eye" : "eye-off");
+    });
+  }
 });

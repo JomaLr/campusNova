@@ -66,11 +66,23 @@ function renderizarLista(lugares) {
       : "Área del campus";
 
     li.innerHTML = `
-      <strong>${nombreLugar}</strong>
-      <span>${lugar.codigo}</span>
+      <span class="li-icon">${NC.icon("map-pin")}</span>
+      <span class="li-text">
+        <strong>${NC.esc(nombreLugar)}</strong>
+        <span>${NC.esc(lugar.codigo)}</span>
+      </span>
     `;
 
+    // Accesible con teclado
+    li.tabIndex = 0;
+    li.setAttribute("role", "button");
     li.addEventListener("click", () => mostrarInfoLugar(lugar, li));
+    li.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        mostrarInfoLugar(lugar, li);
+      }
+    });
     listaContenedor.appendChild(li);
   });
 }
@@ -94,6 +106,10 @@ function mostrarInfoLugar(lugar, elementoLi) {
 
   const tarjetaInfo = document.getElementById("tarjeta-info");
   tarjetaInfo.style.display = "block";
+  // En pantallas pequeñas la tarjeta queda bajo el mapa: acercarla a la vista
+  if (window.matchMedia("(max-width: 960px)").matches) {
+    tarjetaInfo.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
 
   document.getElementById("info-titulo").textContent =
     lugar.nombre || `Espacio: ${lugar.codigo}`;

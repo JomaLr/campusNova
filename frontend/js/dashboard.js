@@ -48,6 +48,17 @@ window.addEventListener("pageshow", async () => {
 
   document.getElementById("info-usuario").textContent =
     `${usuarioActual.nombre} | Depto: ${usuarioActual.departamento}`;
+  const avatar = document.getElementById("avatar-usuario");
+  if (avatar) {
+    avatar.textContent =
+      (usuarioActual.nombre || "?")
+        .trim()
+        .split(/\s+/)
+        .slice(0, 2)
+        .map((p) => p[0])
+        .join("")
+        .toUpperCase() || "?";
+  }
 
   // 3. Adaptar interfaz según el rol
   if (usuarioActual.rol === "superusuario") {
@@ -93,7 +104,7 @@ async function cargarSelectSalones() {
 
   if (salonesList) {
     salonesList.forEach((s) => {
-      select.innerHTML += `<option value="${s.nombre}">${s.nombre}</option>`;
+      select.innerHTML += `<option value="${NC.esc(s.nombre)}">${NC.esc(s.nombre)}</option>`;
     });
   }
 }
@@ -110,7 +121,7 @@ async function cargarSelectDepartamentos() {
   if (!error && deptoList) {
     select.innerHTML = "";
     deptoList.forEach((d) => {
-      select.innerHTML += `<option value="${d.id}">${d.nombre}</option>`;
+      select.innerHTML += `<option value="${NC.esc(d.id)}">${NC.esc(d.nombre)}</option>`;
     });
   }
 }
@@ -121,6 +132,7 @@ async function cargarPublicaciones() {
   if (!tbody) return;
 
   tbody.innerHTML = "<tr><td colspan='5'>Cargando...</td></tr>";
+  const conteo = document.getElementById("conteo-tabla");
 
   let query = supabaseConn
     .from("publicaciones")
@@ -134,17 +146,22 @@ async function cargarPublicaciones() {
   const { data, error } = await query;
 
   if (error) {
-    tbody.innerHTML = `<tr><td colspan='5'>Error: ${error.message}</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan='5'>Error: ${NC.esc(error.message)}</td></tr>`;
     return;
   }
 
   if (!data || data.length === 0) {
     tbody.innerHTML =
       "<tr><td colspan='5'>No hay publicaciones registradas.</td></tr>";
+    listaPublicaciones = [];
+    actualizarResumen([]);
+    if (conteo) conteo.textContent = "";
     return;
   }
 
   listaPublicaciones = data;
+  actualizarResumen(data);
+  if (conteo) conteo.textContent = `${data.length} en total`;
   tbody.innerHTML = "";
 
   data.forEach((pub) => {
@@ -155,19 +172,38 @@ async function cargarPublicaciones() {
         })
       : "N/A";
 
+    const t = (pub.tipo || "").toLowerCase();
+    const chip = pub.tipo
+      ? `<span class="chip chip--${NC.esc(t)}">${NC.esc(pub.tipo)}</span>`
+      : "N/A";
+
     tbody.innerHTML += `
       <tr>
-        <td><strong>${pub.titulo}</strong></td>
-        <td>${pub.tipo}</td>
-        <td>${fechaIni}</td>
-        <td>${pub.lugar_evento || "N/A"}</td>
-        <td style="white-space: nowrap;">
-          <button class="btn btn-primary" style="padding: 4px 8px; font-size: 0.8rem; width: auto;" onclick="prepararEdicion(${pub.id})">Editar</button>
-          <button class="btn btn-danger" style="padding: 4px 8px; font-size: 0.8rem; width: auto;" onclick="eliminarPublicacion(${pub.id})">Eliminar</button>
+        <td data-label="Título"><span class="cell-title">${NC.esc(pub.titulo)}</span></td>
+        <td data-label="Tipo">${chip}</td>
+        <td data-label="Fecha Inicio">${NC.esc(fechaIni)}</td>
+        <td data-label="Lugar">${NC.esc(pub.lugar_evento || "N/A")}</td>
+        <td class="cell-actions">
+          <button class="btn btn-ghost btn-sm" onclick="prepararEdicion(${pub.id})" aria-label="Editar ${NC.esc(pub.titulo)}">${NC.icon("pencil")}Editar</button>
+          <button class="btn btn-danger btn-sm" onclick="eliminarPublicacion(${pub.id})" aria-label="Eliminar ${NC.esc(pub.titulo)}">${NC.icon("trash")}Eliminar</button>
         </td>
       </tr>
     `;
   });
+}
+
+// Contadores de la parte superior del panel
+function actualizarResumen(lista) {
+  const cuenta = (tipo) =>
+    lista.filter((p) => (p.tipo || "").toLowerCase() === tipo).length;
+  const set = (id, v) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = v;
+  };
+  set("stat-total", lista.length);
+  set("stat-aviso", cuenta("aviso"));
+  set("stat-evento", cuenta("evento"));
+  set("stat-noticia", cuenta("noticia"));
 }
 
 // Guardar/Actualizar con el esquema exacto de la DB
@@ -179,7 +215,8 @@ async function guardarPublicacion() {
   const lugar = document.getElementById("lugar").value;
 
   if (!titulo || !contenido) {
-    alert("El título y contenido son obligatorios.");
+    NC.toast("El título y contenido son obligatorios.", "error");
+    document.getElementById(!titulo ? "titulo" : "contenido").focus();
     return;
   }
 
@@ -214,12 +251,13 @@ async function guardarPublicacion() {
   }
 
   if (error) {
-    alert("Error al guardar: " + error.message);
+    NC.toast("Error al guardar: " + error.message, "error");
   } else {
-    alert(
+    NC.toast(
       publicacionEditandoId
         ? "Publicación actualizada correctamente"
         : "Publicación creada con éxito",
+      "success",
     );
     cancelarEdicion();
     await cargarPublicaciones();
@@ -236,7 +274,8 @@ function prepararEdicion(id) {
   document.getElementById("form-titulo").textContent = "Editar Publicación";
   document.getElementById("btn-publicar").textContent =
     "Actualizar Publicación";
-  document.getElementById("btn-cancelar").style.display = "inline-block";
+  document.getElementById("btn-cancelar").style.display = "inline-flex";
+  document.getElementById("tarjeta-form").classList.add("is-editing");
 
   document.getElementById("titulo").value = pub.titulo || "";
   document.getElementById("contenido").value = pub.contenido || "";
@@ -267,6 +306,7 @@ function cancelarEdicion() {
     "Crear Nueva Publicación";
   document.getElementById("btn-publicar").textContent = "Guardar Publicación";
   document.getElementById("btn-cancelar").style.display = "none";
+  document.getElementById("tarjeta-form").classList.remove("is-editing");
 
   document.getElementById("titulo").value = "";
   document.getElementById("contenido").value = "";
@@ -277,7 +317,13 @@ function cancelarEdicion() {
 
 // Eliminar registro
 async function eliminarPublicacion(id) {
-  if (!confirm("¿Seguro que deseas eliminar esta publicación?")) return;
+  const confirmado = await NC.confirm({
+    title: "Eliminar publicación",
+    message: "¿Seguro que deseas eliminar esta publicación? Esta acción no se puede deshacer.",
+    confirmText: "Eliminar",
+    danger: true,
+  });
+  if (!confirmado) return;
 
   const { error } = await supabaseConn
     .from("publicaciones")
@@ -285,8 +331,9 @@ async function eliminarPublicacion(id) {
     .eq("id", id);
 
   if (error) {
-    alert("Error al eliminar: " + error.message);
+    NC.toast("Error al eliminar: " + error.message, "error");
   } else {
+    NC.toast("Publicación eliminada", "success");
     if (publicacionEditandoId === id) cancelarEdicion();
     await cargarPublicaciones();
   }

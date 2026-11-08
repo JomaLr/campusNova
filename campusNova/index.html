@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cargando... | NOVACAMPUS</title>
+    <meta http-equiv="refresh" content="1;url=./frontend/index.html" />
+    <style>
+      /* Estilos base */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background: radial-gradient(40rem 24rem at 50% 0%, rgba(165, 127, 44, 0.25), transparent 70%), #1b396a; /* Fondo institucional */
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        color: #fff;
+        flex-direction: column;
+        gap: 18px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+
+      /* Contenedor del spinner */
+      .loader {
+        width: 50px;
+        height: 50px;
+        border: 4px solid rgba(255, 255, 255, 0.15); /* Borde claro/transparente */
+        border-top-color: #a57f2c; /* Color de la parte que gira (dorado) */
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      /* Animación de rotación */
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Círculo de carga -->
+    <div class="loader" role="status" aria-label="Cargando"></div>
+    <noscript><a href="./frontend/index.html" style="color:#fff">Entrar a NOVACAMPUS</a></noscript>
+    <script>
+      window.location.href = "./frontend/index.html";
+    </script>
+  </body>
+</html>

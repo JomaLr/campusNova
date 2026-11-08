@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NOVACAMPUS · Portal Institucional</title>
+    <meta name="description" content="Plataforma web para la gestión de un portal escolar.">
+    <meta name="author" content="Equipo campusNova">
+    <meta name="theme-color" content="#1b396a">
+    <link rel="icon" href="img/logo-mark.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/index.css" />
+    <!-- Supabase: configuración, librería y scripts de la página -->
+    <script src="js/config.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/ui.js" defer></script>
+    <script src="js/index.js" defer></script>
+  </head>
+  <body data-page="inicio">
+    <div id="shell-header"></div>
+
+    <main id="contenido" tabindex="-1">
+      <!-- Hero + carrusel de avisos destacados -->
+      <section class="hero">
+        <div class="container hero-grid">
+          <div>
+            <span class="eyebrow">Portal institucional</span>
+            <h1>Todo lo que pasa en tu campus, <em>en un solo lugar.</em></h1>
+            <p class="hero-lead">
+              Consulta avisos, eventos y noticias de cada departamento, ubica
+              salones en el mapa y organiza tu semana con el calendario
+              institucional.
+            </p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="calendario.html"
+                ><svg class="icon" aria-hidden="true"><use href="#i-calendar"></use></svg>Ver calendario</a
+              >
+              <a class="btn btn-ghost" href="mapa.html"
+                ><svg class="icon" aria-hidden="true"><use href="#i-map"></use></svg>Explorar el mapa</a
+              >
+            </div>
+          </div>
+
+          <!-- Carrusel Dinámico (Máx. 5 avisos destacados) -->
+          <section class="carousel-container" id="carousel-box" aria-roledescription="carrusel" aria-label="Avisos destacados">
+            <span class="carousel-label"><svg class="icon" aria-hidden="true"><use href="#i-bell"></use></svg>Avisos destacados</span>
+            <div class="carousel-slide active" id="carousel-slide-content" aria-live="polite">
+              Cargando avisos destacados...
+            </div>
+            <div class="carousel-footer">
+              <div class="carousel-controls" id="carousel-dots">
+                <!-- Puntos generados con JS -->
+              </div>
+              <div class="carousel-arrows">
+                <button type="button" id="carousel-prev" aria-label="Aviso anterior"><svg class="icon" aria-hidden="true"><use href="#i-chevron-left"></use></svg></button>
+                <button type="button" id="carousel-next" aria-label="Aviso siguiente"><svg class="icon" aria-hidden="true"><use href="#i-chevron-right"></use></svg></button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <!-- Acceso rápido a departamentos -->
+      <section class="section" style="padding-bottom: 0">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <span class="eyebrow">Departamentos</span>
+              <h2 class="section-title" style="margin-top: .5rem">Explora por área</h2>
+            </div>
+          </div>
+          <div class="quick-grid" id="acceso-rapido"></div>
+        </div>
+      </section>
+
+      <!-- Cuadrícula Dinámica tipo periódico (Máx. 20 anuncios) -->
+      <section class="section">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <span class="eyebrow">Al día</span>
+              <h2 class="section-title" style="margin-top: .5rem">Noticias y Anuncios Recientes</h2>
+            </div>
+            <div class="filters" id="filtros-tipo" role="group" aria-label="Filtrar por tipo">
+              <button type="button" class="filter-btn" data-tipo="" aria-pressed="true">Todo</button>
+              <button type="button" class="filter-btn" data-tipo="aviso" aria-pressed="false">Avisos</button>
+              <button type="button" class="filter-btn" data-tipo="evento" aria-pressed="false">Eventos</button>
+              <button type="button" class="filter-btn" data-tipo="noticia" aria-pressed="false">Noticias</button>
+            </div>
+          </div>
+          <div class="eventos-grid" id="contenedor-noticias" aria-live="polite">
+            <!-- Tarjetas inyectadas dinámicamente con JS -->
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="shell-footer"></div>
+  </body>
+</html>

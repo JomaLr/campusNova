@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mapa Interactivo - NOVACAMPUS</title>
+    <meta name="description" content="Mapa interactivo y directorio del campus en la plataforma NOVACAMPUS.">
+    <meta name="author" content="Equipo campusNova">
+    <meta name="theme-color" content="#1b396a">
+    <link rel="icon" href="img/logo-mark.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/index.css" />
+    <link rel="stylesheet" href="css/mapa.css" />
+    <!-- Supabase: configuración, librería y scripts de la página -->
+    <script src="js/config.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/ui.js" defer></script>
+    <script src="js/mapa.js" defer></script>
+  </head>
+  <body data-page="mapa" data-search-id="input-busqueda-global">
+    <div id="shell-header"></div>
+
+    <main id="contenido" tabindex="-1">
+      <section class="page-hero">
+        <div class="container">
+          <nav class="breadcrumb" aria-label="Ruta de navegación">
+            <a href="index.html">Inicio</a>
+            <svg class="icon" aria-hidden="true"><use href="#i-chevron-right"></use></svg>
+            <span>Mapa</span>
+          </nav>
+          <h1 class="section-title">Mapa y Directorio del Campus</h1>
+          <p>Encuentra salones, edificios y áreas. Elige un lugar del directorio para ver su horario y descripción.</p>
+        </div>
+      </section>
+
+      <section class="page-body">
+        <div class="container mapa-layout">
+          <!-- Panel Izquierdo: Directorio -->
+          <aside class="directorio-panel" aria-label="Directorio del campus">
+            <h3><svg class="icon" aria-hidden="true"><use href="#i-building"></use></svg>Directorio</h3>
+            <div class="buscador-wrap">
+              <svg class="icon" aria-hidden="true"><use href="#i-search"></use></svg>
+              <input
+                type="search"
+                id="buscador-lugares"
+                class="buscador-local"
+                placeholder="Buscar salón, edificio o área..."
+                aria-label="Buscar en el directorio"
+                autocomplete="off"
+              />
+            </div>
+            <ul class="lista-lugares" id="lista-lugares">
+              <li>Cargando lugares...</li>
+            </ul>
+          </aside>
+
+          <!-- Panel Derecho: Mapa y Tarjeta de Info -->
+          <div class="mapa-panel">
+            <div class="mapa-frame">
+              <iframe
+                title="Mapa del campus"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3763.7421412415592!2d-99.0529122!3d19.380314800000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1fd0614558e4b%3A0x3760847a107a0b9f!2sTecNM%20%7C%20Tecnol%C3%B3gico%20Nacional%20de%20M%C3%A9xico%20Campus%20Iztapalapa!5e0!3m2!1ses-419!2smx!4v1779684501544!5m2!1ses-419!2smx"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+              ></iframe>
+            </div>
+
+            <!-- Tarjeta dinámica de información -->
+            <div class="info-card" id="tarjeta-info" aria-live="polite">
+              <h3 id="info-titulo">Nombre del Salón</h3>
+              <p class="info-row">
+                <svg class="icon" aria-hidden="true"><use href="#i-map-pin"></use></svg>
+                <span><strong>Ubicación:</strong> <span id="info-codigo">...</span></span>
+              </p>
+              <p class="info-row">
+                <svg class="icon" aria-hidden="true"><use href="#i-clock"></use></svg>
+                <span><strong>Horario de atención:</strong> <span id="info-horario">...</span></span>
+              </p>
+              <p id="info-descripcion">Descripción del lugar...</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="shell-footer"></div>
+  </body>
+</html>

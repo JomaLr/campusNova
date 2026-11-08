@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title id="page-title">Departamento - NOVACAMPUS</title>
+    <meta name="description" content="Información del departamento en la plataforma NOVACAMPUS.">
+    <meta name="author" content="Equipo campusNova">
+    <meta name="theme-color" content="#1b396a">
+    <link rel="icon" href="img/logo-mark.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/index.css" />
+    <!-- Supabase: configuración, librería y scripts de la página -->
+    <script src="js/config.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/ui.js" defer></script>
+    <script src="js/modulo.js" defer></script>
+  </head>
+  <body data-page="modulo">
+    <div id="shell-header"></div>
+
+    <main id="contenido" tabindex="-1">
+      <section class="page-hero">
+        <div class="container">
+          <nav class="breadcrumb" aria-label="Ruta de navegación">
+            <a href="index.html">Inicio</a>
+            <svg class="icon" aria-hidden="true"><use href="#i-chevron-right"></use></svg>
+            <span>Publicaciones</span>
+          </nav>
+          <h1 class="section-title" id="titulo-pagina">Cargando...</h1>
+          <div id="tarjeta-descripcion">
+            <p id="texto-descripcion">Obteniendo información...</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="page-body">
+        <div class="container">
+          <p class="result-count" id="conteo-resultados" hidden></p>
+          <!-- Contenedor adaptado para lista de noticias -->
+          <div class="stack" id="contenedor-noticias" aria-live="polite">
+            <!-- Las tarjetas se generarán con JavaScript -->
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="shell-footer"></div>
+  </body>
+</html>

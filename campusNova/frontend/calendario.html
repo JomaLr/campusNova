@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calendario - NOVACAMPUS</title>
+    <meta name="description" content="Calendario institucional de la plataforma NOVACAMPUS.">
+    <meta name="author" content="Equipo campusNova">
+    <meta name="theme-color" content="#1b396a">
+    <link rel="icon" href="img/logo-mark.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/index.css" />
+    <link rel="stylesheet" href="css/calendario.css" />
+    <!-- Supabase: configuración, librería y scripts de la página -->
+    <script src="js/config.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/ui.js" defer></script>
+    <script src="js/calendario.js" defer></script>
+  </head>
+  <body data-page="calendario">
+    <div id="shell-header"></div>
+
+    <main id="contenido" tabindex="-1">
+      <section class="page-hero">
+        <div class="container">
+          <nav class="breadcrumb" aria-label="Ruta de navegación">
+            <a href="index.html">Inicio</a>
+            <svg class="icon" aria-hidden="true"><use href="#i-chevron-right"></use></svg>
+            <span>Calendario</span>
+          </nav>
+          <h1 class="section-title">Calendario Institucional</h1>
+          <p>Todos los eventos y avisos con fecha programada. Selecciona un día para ver el detalle.</p>
+        </div>
+      </section>
+
+      <section class="page-body">
+        <div class="container">
+          <div class="calendar-container">
+            <div class="calendar-controls">
+              <h3 id="mes-anio" aria-live="polite">Cargando...</h3>
+              <div class="cal-nav">
+                <button class="btn-calendar" id="btn-prev" type="button" aria-label="Mes anterior">
+                  <svg class="icon" aria-hidden="true"><use href="#i-chevron-left"></use></svg><span class="lbl">Anterior</span>
+                </button>
+                <button class="btn-calendar is-today" id="btn-hoy" type="button">Hoy</button>
+                <button class="btn-calendar" id="btn-next" type="button" aria-label="Mes siguiente">
+                  <span class="lbl">Siguiente</span><svg class="icon" aria-hidden="true"><use href="#i-chevron-right"></use></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="calendar-grid" id="calendario-grid">
+              <!-- El encabezado de los días y las celdas se inyectarán con JS -->
+            </div>
+
+            <div class="calendar-legend" aria-label="Leyenda">
+              <span><i class="l-evento"></i>Evento</span>
+              <span><i class="l-aviso"></i>Aviso</span>
+              <span><i class="l-noticia"></i>Noticia</span>
+            </div>
+          </div>
+
+          <div class="day-detail" id="dia-detalle" hidden></div>
+        </div>
+      </section>
+    </main>
+
+    <div id="shell-footer"></div>
+  </body>
+</html>

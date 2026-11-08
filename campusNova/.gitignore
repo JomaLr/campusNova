@@ -1,0 +1,9 @@
+.env
+
+# Archivos con credenciales reales (Backend y Frontend)
+backend/.env
+# frontend/js/config.js
+
+# Carpetas pesadas de dependencias
+backend/node_modules
+node_modules

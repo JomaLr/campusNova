@@ -1,0 +1,103 @@
+openapi: 3.0.3
+info:
+  title: API de campusNova
+  description: Servicio web e interfaz para el portal escolar campusNova.
+  version: 1.0.0
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+servers:
+  - url: http://localhost:3000
+    description: Servidor local Backend (Docker Compose)
+tags:
+  - name: Noticias
+    description: Operaciones sobre el contenido del portal campusNova
+paths:
+  /api/noticias:
+    get:
+      tags: [Noticias]
+      summary: Listar todas las noticias
+      responses:
+        "200":
+          description: Lista de noticias obtenida correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Noticia"
+    post:
+      tags: [Noticias]
+      summary: Crear una nueva noticia
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NuevaNoticia"
+      responses:
+        "201":
+          description: Noticia creada exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Noticia"
+        "400":
+          description: Datos de entrada inválidos
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/noticias/{id}:
+    get:
+      tags: [Noticias]
+      summary: Consultar una noticia por su ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Noticia encontrada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Noticia"
+        "404":
+          description: Noticia no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    Noticia:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        titulo:
+          type: string
+          example: Anuncio de reinscripciones campusNova
+        contenido:
+          type: string
+          example: Se abren las fechas oficiales para el siguiente ciclo.
+    NuevaNoticia:
+      type: object
+      required: [titulo, contenido]
+      properties:
+        titulo:
+          type: string
+        contenido:
+          type: string
+    Error:
+      type: object
+      properties:
+        mensaje:
+          type: string
+          example: Recurso no encontrado

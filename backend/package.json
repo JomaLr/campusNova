@@ -1,0 +1,18 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/config/index.js"
+  },
+  "keywords": [],
+  "author": "Equipo campusNova",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^18.0.6",
+    "swagger-ui-express": "^5.0.1",
+    "yaml": "^2.9.1"
+  }
+}

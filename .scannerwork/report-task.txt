@@ -1,0 +1,6 @@
+projectKey=campusNova
+serverUrl=http://localhost:9000
+serverVersion=26.10.0.133078
+dashboardUrl=http://localhost:9000/dashboard?id=campusNova
+ceTaskId=98388bf1-2d8c-4357-92e0-b9a0b6363cbf
+ceTaskUrl=http://localhost:9000/api/ce/task?id=98388bf1-2d8c-4357-92e0-b9a0b6363cbf

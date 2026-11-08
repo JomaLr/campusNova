@@ -1,13 +1,4 @@
-/* ==========================================================================
-   NOVACAMPUS · ui.js
-   Componentes de interfaz compartidos (sin dependencias):
-   - Sprite de iconos SVG          → NC.icon("nombre")
-   - Encabezado y pie de página    → se pintan en #shell-header / #shell-footer
-   - Menú hamburguesa y desplegable accesibles
-   - Avisos (toast) y confirmación → NC.toast(), NC.confirm()
-   - Escape de HTML                → NC.esc()
-   Debe cargarse ANTES que el script de cada página.
-   ========================================================================== */
+
 (function () {
   "use strict";
 
@@ -143,7 +134,7 @@
       "</div></div></header>";
   }
 
-  /* ---------- Pie de página ---------- */
+   /* ---------- Pie de página ---------- */
   function renderFooter(host) {
     host.outerHTML =
       '<footer class="site-footer"><div class="container">' +
@@ -161,7 +152,6 @@
       "</div>" +
       '<div class="footer-bottom">' +
       '<p><a href="login.html" class="footer-copy" aria-label="Acceso administrativo">©</a> 2026 Universidad. Todos los derechos reservados.</p>' +
-      '<a class="footer-admin" href="login.html">' + icon("lock") + "Acceso administrativo</a>" +
       "</div></div></footer>";
   }
 

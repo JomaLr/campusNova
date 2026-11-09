@@ -7,6 +7,17 @@ let lugaresGlobales = [];
 
 document.addEventListener("DOMContentLoaded", async () => {
   // 1. Configurar buscador global del header
+  configurarBuscadores();
+
+  // 2. Obtener lista de salones/lugares desde la DB y renderizar
+  await cargarDirectorio();
+
+  // 3. Inicializar los eventos del mapa SVG y la tarjeta
+  inicializarMapaYTarjeta();
+});
+
+// --- FUNCIONES DE BÚSQUEDA ---
+function configurarBuscadores() {
   const inputGlobal = document.getElementById("input-busqueda-global");
   if (inputGlobal) {
     inputGlobal.addEventListener("keypress", (e) => {
@@ -17,18 +28,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // 2. Obtener lista de salones/lugares desde la DB
-  await cargarDirectorio();
-
-  // 3. Configurar buscador local del directorio
   const buscadorLocal = document.getElementById("buscador-lugares");
   if (buscadorLocal) {
     buscadorLocal.addEventListener("input", (e) => {
       filtrarDirectorio(e.target.value);
     });
   }
-});
+}
 
+// --- FUNCIONES DE BASE DE DATOS Y DIRECTORIO ---
 async function cargarDirectorio() {
   const listaContenedor = document.getElementById("lista-lugares");
 
@@ -59,11 +67,11 @@ function renderizarLista(lugares) {
   lugares.forEach((lugar) => {
     const li = document.createElement("li");
     li.className = "lugar-item";
+    li.setAttribute("data-target", lugar.codigo); // Se alinea con el atributo del SVG
+    li.tabIndex = 0;
+    li.setAttribute("role", "button");
 
     const nombreLugar = lugar.nombre || `Espacio: ${lugar.codigo}`;
-    const descCorta = lugar.descripcion
-      ? lugar.descripcion.substring(0, 30) + "..."
-      : "Área del campus";
 
     li.innerHTML = `
       <span class="li-icon">${NC.icon("map-pin")}</span>
@@ -73,16 +81,16 @@ function renderizarLista(lugares) {
       </span>
     `;
 
-    // Accesible con teclado
-    li.tabIndex = 0;
-    li.setAttribute("role", "button");
-    li.addEventListener("click", () => mostrarInfoLugar(lugar, li));
+    // Eventos para la lista
+    const triggerSeleccion = () => procesarSeleccion(lugar.codigo, null);
+    li.addEventListener("click", triggerSeleccion);
     li.addEventListener("keydown", (e) => {
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
-        mostrarInfoLugar(lugar, li);
+        triggerSeleccion();
       }
     });
+
     listaContenedor.appendChild(li);
   });
 }
@@ -97,27 +105,112 @@ function filtrarDirectorio(termino) {
   renderizarLista(filtrados);
 }
 
-function mostrarInfoLugar(lugar, elementoLi) {
-  // Resaltar el seleccionado en la lista
-  document
-    .querySelectorAll(".lugar-item")
-    .forEach((el) => el.classList.remove("activo"));
-  if (elementoLi) elementoLi.classList.add("activo");
+// --- FUNCIONES DEL MAPA INTERACTIVO Y TARJETA ---
+function inicializarMapaYTarjeta() {
+  const areasMapa = document.querySelectorAll(".area-interactiva");
+  const infoBox = document.getElementById("info-mapa"); // Tooltip opcional
 
-  const tarjetaInfo = document.getElementById("tarjeta-info");
-  tarjetaInfo.style.display = "block";
-  // En pantallas pequeñas la tarjeta queda bajo el mapa: acercarla a la vista
-  if (window.matchMedia("(max-width: 960px)").matches) {
-    tarjetaInfo.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  areasMapa.forEach((area) => {
+    // Hover (ratón encima)
+    area.addEventListener("mouseenter", (e) => {
+      e.target.style.cursor = "pointer";
+      e.target.style.opacity = "0.7";
+      e.target.style.transition = "opacity 0.2s ease";
+
+      if (infoBox) {
+        const edificio = e.target.dataset.edificio;
+        const nombreArea = e.target.dataset.area.replace(/-/g, " ");
+        infoBox.innerHTML =
+          edificio === "Ninguno"
+            ? `Área: <strong>${nombreArea}</strong>`
+            : `Edificio <strong>${edificio}</strong> - ${nombreArea}`;
+      }
+    });
+
+    // Quitar hover
+    area.addEventListener("mouseleave", (e) => {
+      e.target.style.opacity = "1";
+      if (infoBox) infoBox.innerHTML = "Pasa el cursor sobre un área...";
+    });
+
+    // Clic en el área del SVG
+    area.addEventListener("click", function () {
+      procesarSeleccion(this.id, this);
+    });
+  });
+}
+
+function procesarSeleccion(targetId, areaElement = null) {
+  // 1. Limpiar selecciones previas
+  document
+    .querySelectorAll(".area-interactiva")
+    .forEach((a) => a.classList.remove("iluminado", "activo"));
+  document
+    .querySelectorAll(".lista-lugares li, .lugar-item")
+    .forEach((item) => item.classList.remove("activo"));
+
+  // 2. Obtener el elemento SVG si no se pasó (cuando se hace clic desde la lista)
+  const areaSvg = areaElement || document.getElementById(targetId);
+
+  // 3. Iluminar SVG y marcar la lista
+  if (areaSvg) areaSvg.classList.add("iluminado", "activo");
+
+  const itemLista = document.querySelector(
+    `.lista-lugares li[data-target="${targetId}"], .lugar-item[data-target="${targetId}"]`,
+  );
+  if (itemLista) {
+    itemLista.classList.add("activo");
+    // Scroll a la tarjeta en móviles
+    if (window.matchMedia("(max-width: 960px)").matches) {
+      document
+        .getElementById("tarjeta-info")
+        .scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
   }
 
-  document.getElementById("info-titulo").textContent =
-    lugar.nombre || `Espacio: ${lugar.codigo}`;
-  document.getElementById("info-codigo").textContent = lugar.codigo;
+  // 4. Extraer datos para la tarjeta
+  // Primero intentamos sacar los datos de Supabase si existen
+  const lugarData = lugaresGlobales.find((l) => l.codigo === targetId);
 
-  document.getElementById("info-horario").textContent =
-    lugar.horario || "Lunes a Viernes, 09:00 - 18:00 hrs";
-  document.getElementById("info-descripcion").textContent =
-    lugar.descripcion ||
-    "Este es un espacio del campus disponible para actividades académicas y administrativas.";
+  // Extraemos del SVG como respaldo
+  let edificio = areaSvg ? areaSvg.getAttribute("data-edificio") : "Ninguno";
+  let nombreArea = areaSvg ? areaSvg.getAttribute("data-area") : targetId;
+
+  // Si tenemos datos de Supabase, podemos usarlos para enriquecer la tarjeta
+  const nombreFinal =
+    lugarData && lugarData.nombre
+      ? lugarData.nombre
+      : nombreArea
+        ? nombreArea.replace(/-/g, " ")
+        : "Área Desconocida";
+  const descFinal =
+    lugarData && lugarData.descripcion ? lugarData.descripcion : null;
+
+  actualizarTarjeta(edificio, nombreFinal, descFinal);
+}
+
+function actualizarTarjeta(edificio, nombreArea, descripcionPersonalizada) {
+  const tarjeta = document.getElementById("tarjeta-info");
+  const titulo = document.getElementById("tarjeta-titulo");
+  const txtEdificio = document.getElementById("tarjeta-edificio");
+  const txtArea = document.getElementById("tarjeta-area");
+  const txtDesc = document.getElementById("tarjeta-desc");
+
+  tarjeta.classList.remove("oculta");
+  tarjeta.style.display = "block";
+
+  titulo.textContent = nombreArea;
+  txtArea.textContent = nombreArea;
+
+  if (!edificio || edificio === "Ninguno") {
+    txtEdificio.textContent = "Área Exterior";
+    txtDesc.textContent =
+      descripcionPersonalizada ||
+      `Esta es un área al aire libre en el campus conocida como ${nombreArea}.`;
+  } else {
+    txtEdificio.textContent = `Edificio ${edificio}`;
+    txtDesc.textContent =
+      descripcionPersonalizada ||
+      `El ${nombreArea} se encuentra ubicado en el Edificio ${edificio}. \n Aquí podrás consultar horarios y disponibilidad próximamente.`;
+  }
 }

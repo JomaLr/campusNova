@@ -1,56 +1,324 @@
 /* ==========================================================================
    NOVACAMPUS · Mapa y directorio (estilos específicos; base en index.css)
    ========================================================================== */
-.mapa-layout { display: grid; grid-template-columns: minmax(280px, 360px) minmax(0, 1fr); gap: 1.5rem; align-items: start; }
+.mapa-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
 
 .directorio-panel {
-  position: sticky; top: calc(var(--header-h) + 1rem);
-  display: flex; flex-direction: column; gap: 1rem; padding: 1.25rem;
-  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: calc(var(--header-h) + 1rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
 }
-.directorio-panel h3 { font-family: var(--font-display); font-size: 1.25rem; font-weight: 600; display: flex; align-items: center; gap: .6rem; }
-.directorio-panel h3 .icon { color: var(--brand-600); }
-.buscador-wrap { position: relative; }
-.buscador-wrap > .icon { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+.directorio-panel h3 {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.directorio-panel h3 .icon {
+  color: var(--brand-600);
+}
+.buscador-wrap {
+  position: relative;
+}
+.buscador-wrap > .icon {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  pointer-events: none;
+}
 .buscador-local {
-  width: 100%; height: 44px; padding: 0 1rem 0 2.5rem; border-radius: 999px; border: 1px solid var(--line-strong); background: var(--surface-2);
-  font-size: .92rem; transition: border-color .2s, box-shadow .2s, background .2s;
+  width: 100%;
+  height: 44px;
+  padding: 0 1rem 0 2.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  background: var(--surface-2);
+  font-size: 0.92rem;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s,
+    background 0.2s;
 }
-.buscador-local:focus { outline: none; background: #fff; border-color: var(--brand-600); box-shadow: var(--ring); }
+.buscador-local:focus {
+  outline: none;
+  background: #fff;
+  border-color: var(--brand-600);
+  box-shadow: var(--ring);
+}
 
-.lista-lugares { display: flex; flex-direction: column; gap: .35rem; max-height: min(560px, 62vh); overflow-y: auto; margin-right: -.4rem; padding-right: .4rem; scrollbar-width: thin; }
-.lista-lugares > li:not(.lugar-item) { padding: 1rem .5rem; color: var(--muted); text-align: center; font-size: .9rem; }
+.lista-lugares {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  max-height: min(560px, 62vh);
+  overflow-y: auto;
+  margin-right: -0.4rem;
+  padding-right: 0.4rem;
+  scrollbar-width: thin;
+}
+.lista-lugares > li:not(.lugar-item) {
+  padding: 1rem 0.5rem;
+  color: var(--muted);
+  text-align: center;
+  font-size: 0.9rem;
+}
 .lugar-item {
-  display: flex; align-items: center; gap: .8rem; padding: .7rem .8rem; border-radius: var(--r-md); border: 1px solid transparent; cursor: pointer;
-  transition: background .15s, border-color .15s, transform .15s;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.7rem 0.8rem;
+  border-radius: var(--r-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    transform 0.15s;
 }
-.lugar-item:hover { background: var(--brand-50); }
-.lugar-item:active { transform: scale(.99); }
-.lugar-item .li-icon { width: 36px; height: 36px; flex: none; border-radius: 10px; display: grid; place-items: center; background: var(--surface-2); color: var(--ink-2); transition: background .2s, color .2s; }
-.lugar-item .li-text { display: flex; flex-direction: column; min-width: 0; }
-.lugar-item strong { font-size: .92rem; font-weight: 600; line-height: 1.3; overflow-wrap: anywhere; }
-.lugar-item span { font-size: .78rem; color: var(--muted); }
-.lugar-item.activo { background: var(--brand-50); border-color: var(--brand-500); }
-.lugar-item.activo .li-icon { background: var(--brand-700); color: #fff; }
+.lugar-item:hover {
+  background: var(--brand-50);
+}
+.lugar-item:active {
+  transform: scale(0.99);
+}
+.lugar-item .li-icon {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: var(--surface-2);
+  color: var(--ink-2);
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+.lugar-item .li-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.lugar-item strong {
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+.lugar-item span {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+.lugar-item.activo {
+  background: var(--brand-50);
+  border-color: var(--brand-500);
+}
+.lugar-item.activo .li-icon {
+  background: var(--brand-700);
+  color: #fff;
+}
 
-.mapa-panel { display: flex; flex-direction: column; gap: 1.25rem; min-width: 0; }
-.mapa-frame { overflow: hidden; border-radius: var(--r-xl); border: 1px solid var(--line); box-shadow: var(--shadow-md); background: var(--surface-2); line-height: 0; }
-.mapa-frame iframe { width: 100%; height: clamp(300px, 52vh, 480px); border: 0; display: block; }
+.mapa-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  min-width: 0;
+}
+.mapa-frame {
+  overflow: hidden;
+  border-radius: var(--r-xl);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-md);
+  background: var(--surface-2);
+  line-height: 0;
+}
+.mapa-frame iframe {
+  width: 100%;
+  height: clamp(300px, 52vh, 480px);
+  border: 0;
+  display: block;
+}
 
 .info-card {
   display: none; /* Se muestra con JS al elegir un lugar */
-  background: var(--surface); border: 1px solid var(--line); border-left: 5px solid var(--brand-700);
-  border-radius: var(--r-lg); padding: 1.5rem 1.6rem; box-shadow: var(--shadow-sm);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--brand-700);
+  border-radius: var(--r-lg);
+  padding: 1.5rem 1.6rem;
+  box-shadow: var(--shadow-sm);
 }
-.info-card.visible, .info-card[style*="block"] { animation: rise .4s var(--ease) both; }
-.info-card h3 { font-family: var(--font-display); font-size: 1.5rem; font-weight: 600; color: var(--brand-800); margin-bottom: .75rem; overflow-wrap: anywhere; }
-.info-row { display: flex; align-items: flex-start; gap: .65rem; margin-bottom: .5rem; color: var(--ink-2); }
-.info-row .icon { margin-top: .22rem; color: var(--brand-600); }
-.info-row strong { color: var(--ink); }
-#info-descripcion { margin-top: .9rem; padding-top: .9rem; border-top: 1px solid var(--line); color: var(--ink-2); line-height: 1.65; overflow-wrap: anywhere; }
+.info-card.visible,
+.info-card[style*="block"] {
+  animation: rise 0.4s var(--ease) both;
+}
+.info-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--brand-800);
+  margin-bottom: 0.75rem;
+  overflow-wrap: anywhere;
+}
+.info-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  margin-bottom: 0.5rem;
+  color: var(--ink-2);
+}
+.info-row .icon {
+  margin-top: 0.22rem;
+  color: var(--brand-600);
+}
+.info-row strong {
+  color: var(--ink);
+}
+#info-descripcion {
+  margin-top: 0.9rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--line);
+  color: var(--ink-2);
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
 
 @media (max-width: 960px) {
-  .mapa-layout { grid-template-columns: 1fr; }
-  .directorio-panel { position: static; }
-  .lista-lugares { max-height: 320px; }
+  .mapa-layout {
+    grid-template-columns: 1fr;
+  }
+  .directorio-panel {
+    position: static;
+  }
+  .lista-lugares {
+    max-height: 320px;
+  }
+}
+
+/* --- ESTILOS DEL MAPA SVG --- */
+#plano-svg {
+  width: 100%;
+  height: 100%;
+  max-height: clamp(300px, 52vh, 480px);
+  display: block;
+}
+
+/* Estado normal de los salones cliqueables */
+.area-interactiva {
+  fill: var(--brand-100);
+  stroke: var(--brand-500);
+  stroke-width: 1.5px;
+  transition:
+    fill 0.3s var(--ease),
+    stroke-width 0.3s var(--ease);
+  cursor: pointer;
+}
+
+/* Estado hover (pasar el mouse) */
+.area-interactiva:hover {
+  fill: var(--brand-50);
+}
+
+/* Estado activo (seleccionado desde el mapa o desde la lista) */
+.area-interactiva.activo {
+  fill: var(--brand-700);
+  stroke: var(--gold-500);
+  stroke-width: 3px;
+}
+
+.elemento-al-fondo {
+  position: relative;
+  z-index: -100000; /* Un número menor (o negativo) lo manda atrás */
+}
+
+/* Estilos para la nueva tarjeta de información */
+.tarjeta-detalle {
+  background-color: #ffffff;
+  border-left: 5px solid #1b396a; /* Color de tu tema */
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.tarjeta-detalle.oculta {
+  display: none; /* Oculta la tarjeta hasta que se seleccione algo */
+}
+
+#tarjeta-titulo {
+  margin-top: 0;
+  color: #1b396a;
+  font-family: "Fraunces", serif;
+}
+
+.tarjeta-datos {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.tarjeta-desc {
+  margin-bottom: 0;
+  color: #333;
+  line-height: 1.5;
+}
+
+/* Interacción en el SVG */
+.area-interactiva {
+  cursor: pointer;
+  transition: fill-opacity 0.2s ease;
+}
+
+.area-interactiva:hover {
+  fill-opacity: 0.6; /* Hace que el área "brille" o se aclare al pasar el mouse */
+  stroke: #1b396a;
+  stroke-width: 4px;
+}
+
+/* Estilos para la lista del directorio */
+.lista-lugares li {
+  padding: 12px 15px;
+  border-bottom: 1px solid #eaeaea;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+  list-style: none; /* Por si acaso */
+}
+
+.lista-lugares li:hover {
+  background-color: #f4f6f9;
+}
+
+/* Item activo en el menú lateral */
+.lista-lugares li.activo {
+  background-color: #1b396a;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+/* Clase dinámica que se agregará por JS para iluminar el SVG */
+.area-interactiva.iluminado {
+  fill-opacity: 0.6 !important;
+  stroke: #1b396a !important;
+  stroke-width: 4px !important;
 }

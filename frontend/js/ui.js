@@ -1,4 +1,3 @@
-
 (function () {
   "use strict";
 
@@ -151,7 +150,7 @@
       '<li><a href="calendario.html">Calendario</a></li></ul></div>' +
       "</div>" +
       '<div class="footer-bottom">' +
-      '<p><a href="login.html" class="footer-copy" aria-label="Acceso administrativo">©</a> 2026 Universidad. Todos los derechos reservados.</p>' +
+      '<p><a href="login.html" class="footer-copy" aria-label="Acceso administrativo">©</a> 2026 Universidad. Todos los derechos reservados.<span id="btn-visitas-secreto" title="Ver métricas" style="cursor: pointer; opacity: 0.35; margin-left: 12px; user-select: none;">•</span></p>' +
       "</div></div></footer>";
   }
 

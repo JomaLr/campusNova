@@ -263,3 +263,43 @@ function pintarNoticias() {
     `;
   });
 }
+
+// --- CONTADOR DE VISITAS SILENCIOSO + BOTÓN SECRETO EN FOOTER ---
+let totalVisitasActual = 0;
+
+async function registrarVisitasSilencioso() {
+  try {
+    // 1. Obtener el número actual desde Supabase
+    const { data, error } = await supabaseConn
+      .from("visitas")
+      .select("contador")
+      .eq("id", 1)
+      .single();
+
+    if (error) throw error;
+
+    if (data) {
+      totalVisitasActual = data.contador + 1;
+
+      // 2. Sumar +1 en la base de datos en silencio
+      await supabaseConn
+        .from("visitas")
+        .update({ contador: totalVisitasActual })
+        .eq("id", 1);
+    }
+  } catch (err) {
+    console.error("Error en contador silencioso:", err);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  registrarVisitasSilencioso();
+
+  // Escuchar el clic en el puntito secreto del footer
+  document.addEventListener("click", (e) => {
+    if (e.target && e.target.id === "btn-visitas-secreto") {
+      e.target.style.opacity = "1";
+      e.target.innerText = ` • Visitas totales: ${totalVisitasActual || "Cargando..."}`;
+    }
+  });
+});
